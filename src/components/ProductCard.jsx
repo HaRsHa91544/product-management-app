@@ -1,6 +1,6 @@
 function ProductCard({ product }) {
     const { id, name, price, category, description, stockQuantity } = product;
-    return <li key={id}>
+    return <li>
         <h2>{name}</h2>
         <h3>₹{price}</h3>
         <h4>{category}</h4>

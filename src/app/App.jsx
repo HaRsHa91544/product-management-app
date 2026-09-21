@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { ProductsContext } from "../context/ProductsContext.js"
 import ProductsList from "../components/ProductList.jsx";
+import ProductForm from "../components/ProductForm.jsx";
 
 function App() {
     const [products, setProducts] = useState([
@@ -31,7 +32,8 @@ function App() {
     ]);
 
     return (
-        <ProductsContext value={products}>
+        <ProductsContext value={{ products, setProducts }}>
+            <ProductForm></ProductForm>
             <ProductsList></ProductsList>
         </ProductsContext>
     );
