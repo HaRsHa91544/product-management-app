@@ -32,6 +32,14 @@ function ProductForm() {
     function productSubmitHandler(e) {
         e.preventDefault();
         setProducts([...products, productForm]);
+        setProductForm({
+            id: 0,
+            name: '',
+            price: 0,
+            category: '',
+            description: '',
+            stockQuantity: 0
+        });
     }
 
     return <form onSubmit={productSubmitHandler}>
@@ -80,8 +88,7 @@ function ProductForm() {
                 errors.description ||
                 errors.category ||
                 errors.stockQuantity
-            }
-        >
+            }>
             Add Product</button>
     </form>;
 }
