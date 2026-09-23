@@ -1,17 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { ProductsContext } from "../context/ProductsContext.js";
+import { ProductFormContext } from "../context/ProductFormContext.js";
 
 function ProductForm() {
     const { products, setProducts } = useContext(ProductsContext);
 
-    const [productForm, setProductForm] = useState({
-        id: 0,
-        name: '',
-        price: 0,
-        category: '',
-        description: '',
-        stockQuantity: 0
-    });
+    const { productForm, setProductForm } = useContext(ProductFormContext);
 
     const errors = {
         id: !(Number(productForm.id)) ? 'Product ID is required' : '',
@@ -31,14 +25,27 @@ function ProductForm() {
 
     function productSubmitHandler(e) {
         e.preventDefault();
-        setProducts([...products, productForm]);
+
+        if (productForm.isExists) {
+            const index = products.findIndex((p) => p.id == productForm.id);
+            console.log(index);
+            
+            products.splice(index, 1, productForm);
+            setProducts([...products]);
+        }
+        else {
+            productForm.isExists = true;
+            setProducts([...products, productForm]);
+        }
+
         setProductForm({
             id: 0,
             name: '',
             price: 0,
             category: '',
             description: '',
-            stockQuantity: 0
+            stockQuantity: 0,
+            isExists: false
         });
     }
 
@@ -46,6 +53,7 @@ function ProductForm() {
         <label htmlFor="id">Product ID</label>
         <input type="number" name="id" id="id"
             value={productForm.id} onChange={inputChangeHandler}
+            readOnly={productForm.isExists}
         />
         {errors.id && <p>{errors.id}</p>}
 
@@ -89,7 +97,7 @@ function ProductForm() {
                 errors.category ||
                 errors.stockQuantity
             }>
-            Add Product</button>
+            {(productForm.isExists) ? 'Update Product' : 'Add Product'}</button>
     </form>;
 }
 

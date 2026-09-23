@@ -1,13 +1,19 @@
 import { useContext, useState } from "react";
 import { ProductsContext } from "../context/ProductsContext.js";
+import { ProductFormContext } from "../context/ProductFormContext.js";
 
 function ProductCard({ product }) {
     const { setProducts } = useContext(ProductsContext);
+    const { setProductForm } = useContext(ProductFormContext);
 
     const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false);
 
     function deleteProduct(id) {
         setProducts(prev => prev.filter(p => p.id != id));
+    }
+
+    function editProduct(product) {
+        setProductForm(product);
     }
 
     const { id, name, price, category, description, stockQuantity } = product;
@@ -26,7 +32,10 @@ function ProductCard({ product }) {
                     <button onClick={() => setIsDeleteBtnClicked(false)}>No</button>
                 </div>
                 :
-                <button onClick={() => setIsDeleteBtnClicked(true)}>Delete</button>
+                <>
+                    <button onClick={() => editProduct(product)}>Edit</button>
+                    <button onClick={() => setIsDeleteBtnClicked(true)}>Delete</button>
+                </>
         }
     </li>;
 }
