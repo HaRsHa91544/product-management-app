@@ -7,13 +7,28 @@ function ProductsList() {
     const { products } = useContext(ProductsContext);
 
     const [searchValue, setSearchValue] = useState('');
+    const [filterByCategory, setFilterByCategory] = useState('');
 
-    let searchedProducts;
-    if (searchValue) {
-        searchedProducts = products.filter(p => p.name.toLowerCase().includes(searchValue.toLowerCase()))
+    const categories = Array.from(new Set(products.map(p => p.category)));
+
+    
+    /* 
+        To check the selected category really exists in the current product's categories.
+        It is useful when all products of a category are removed and filterByCategory still
+        stored the deleted category.
+    */
+    if (filterByCategory && !categories.includes(filterByCategory)) {
+        setFilterByCategory('');
     }
-    else {
-        searchedProducts = products;
+
+
+    let filteredProducts = products;
+
+    if (filterByCategory) {
+        filteredProducts = products.filter(p => p.category == filterByCategory)
+    }
+    if (searchValue) {
+        filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(searchValue.toLowerCase()))
     }
 
     return <section>
@@ -21,20 +36,27 @@ function ProductsList() {
 
         <SearchBar searchValue={searchValue} setSearchValue={setSearchValue}></SearchBar>
 
+        <select onChange={(e) => setFilterByCategory(e.target.value)}>
+            <option value=''>Select the category</option>
+            {
+                categories.map(c => <option key={c} value={c}>{c}</option>)
+            }
+        </select>
+
         {
-            searchedProducts.length === 0 &&
+            filteredProducts.length === 0 &&
             <h3>No products found!</h3>
         }
 
         {
-            searchedProducts.length > 0 &&
+            filteredProducts.length > 0 &&
             <ul>
                 {
-                    searchedProducts.map(product => <ProductCard key={product.id} product={product} />)
+                    filteredProducts.map(product => <ProductCard key={product.id} product={product} />)
                 }
             </ul>
         }
-    </section>;
+    </section >;
 }
 
 export default ProductsList;
