@@ -1,3 +1,5 @@
+import InputField from "./ui/InputField.jsx";
+
 function SearchBar({ searchValue, setSearchValue }) {
 
     function searchInputHandler(e) {
@@ -5,11 +7,14 @@ function SearchBar({ searchValue, setSearchValue }) {
         setSearchValue(value);
     }
 
-    return <input type="text"
-        placeholder="Search for product"
+    return <InputField
+        type={'text'}
+        name={'searchInput'}
+        id={'searchInput'}
         value={searchValue}
-        onChange={searchInputHandler}>
-    </input>
+        changeHandler={searchInputHandler}
+        placeholder={'Search for product'}
+    ></InputField>;
 }
 
 export default SearchBar;

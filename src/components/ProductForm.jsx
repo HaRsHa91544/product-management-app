@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { ProductsContext } from "../context/ProductsContext.js";
 import { ProductFormContext } from "../context/ProductFormContext.js";
+import InputField from "./ui/InputField.jsx";
 
 function ProductForm() {
     const { products, setProducts } = useContext(ProductsContext);
@@ -28,8 +29,6 @@ function ProductForm() {
 
         if (productForm.isExists) {
             const index = products.findIndex((p) => p.id == productForm.id);
-            console.log(index);
-            
             products.splice(index, 1, productForm);
             setProducts([...products]);
         }
@@ -50,42 +49,67 @@ function ProductForm() {
     }
 
     return <form onSubmit={productSubmitHandler}>
-        <label htmlFor="id">Product ID</label>
-        <input type="number" name="id" id="id"
-            value={productForm.id} onChange={inputChangeHandler}
+
+        <InputField
+            label={'Product ID'}
+            type={'number'}
+            name={'id'}
+            id={'id'}
+            value={productForm.id}
+            changeHandler={inputChangeHandler}
             readOnly={productForm.isExists}
-        />
-        {errors.id && <p>{errors.id}</p>}
+            errors={errors.id}
+        ></InputField>
 
-        <label htmlFor="name">Product Name</label>
-        <input type="text" name="name" id="name"
-            value={productForm.name} onChange={inputChangeHandler}
-        />
-        {errors.name && <p>{errors.name}</p>}
+        <InputField
+            label={'Product Name'}
+            type={'text'}
+            name={'name'}
+            id={'name'}
+            value={productForm.name}
+            changeHandler={inputChangeHandler}
+            errors={errors.name}
+        ></InputField>
 
-        <label htmlFor="price">Product Price</label>
-        <input type="number" name="price" id="price"
-            value={productForm.price} onChange={inputChangeHandler}
-        />
-        {errors.price && <p>{errors.price}</p>}
+        <InputField
+            label={'Product Price'}
+            type={'number'}
+            name={'price'}
+            id={'price'}
+            value={productForm.price}
+            changeHandler={inputChangeHandler}
+            errors={errors.price}
+        ></InputField>
 
-        <label htmlFor="category">Category</label>
-        <input type="text" name="category" id="category"
-            value={productForm.category} onChange={inputChangeHandler}
-        />
-        {errors.category && <p>{errors.category}</p>}
+        <InputField
+            label={'Category'}
+            type={'text'}
+            name={'category'}
+            id={'category'}
+            value={productForm.category}
+            changeHandler={inputChangeHandler}
+            errors={errors.category}
+        ></InputField>
 
-        <label htmlFor="description">Description</label>
-        <textarea name="description" id="description"
-            value={productForm.description} onChange={inputChangeHandler}
-        />
-        {errors.description && <p>{errors.description}</p>}
+        <InputField
+            label={'Description'}
+            type={'text'}
+            name={'description'}
+            id={'description'}
+            value={productForm.description}
+            changeHandler={inputChangeHandler}
+            errors={errors.description}
+        ></InputField>
 
-        <label htmlFor="stockQuantity">Stock Quantity</label>
-        <input type="number" name="stockQuantity" id="stockQuantity"
-            value={productForm.stockQuantity} onChange={inputChangeHandler}
-        />
-        {errors.stockQuantity && <p>{errors.stockQuantity}</p>}
+        <InputField
+            label={'Stock Quantity'}
+            type={'number'}
+            name={'stockQuantity'}
+            id={'stockQuantity'}
+            value={productForm.stockQuantity}
+            changeHandler={inputChangeHandler}
+            errors={errors.stockQuantity}
+        ></InputField>
 
         <button
             type="submit"
@@ -96,8 +120,9 @@ function ProductForm() {
                 errors.description ||
                 errors.category ||
                 errors.stockQuantity
-            }>
-            {(productForm.isExists) ? 'Update Product' : 'Add Product'}</button>
+            }
+        >{(productForm.isExists) ? 'Update Product' : 'Add Product'}
+        </button>
     </form>;
 }
 
