@@ -9,16 +9,19 @@ function ProductsList() {
     const [searchValue, setSearchValue] = useState('');
     const [filterByCategory, setFilterByCategory] = useState('');
 
+    function clearFilterByCategory() {
+        setFilterByCategory('');
+    }
+
     const categories = Array.from(new Set(products.map(p => p.category)));
 
-    
     /* 
         To check the selected category really exists in the current product's categories.
         It is useful when all products of a category are removed and filterByCategory still
         stored the deleted category.
     */
     if (filterByCategory && !categories.includes(filterByCategory)) {
-        setFilterByCategory('');
+        clearFilterByCategory();
     }
 
 
@@ -36,12 +39,14 @@ function ProductsList() {
 
         <SearchBar searchValue={searchValue} setSearchValue={setSearchValue}></SearchBar>
 
-        <select onChange={(e) => setFilterByCategory(e.target.value)}>
+        <select value={filterByCategory} onChange={(e) => setFilterByCategory(e.target.value)}>
             <option value=''>Select the category</option>
             {
                 categories.map(c => <option key={c} value={c}>{c}</option>)
             }
         </select>
+
+        <button onClick={clearFilterByCategory}>Clear Filter</button>
 
         {
             filteredProducts.length === 0 &&
