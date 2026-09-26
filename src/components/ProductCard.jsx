@@ -2,9 +2,17 @@ import { useContext, useState } from "react";
 import { ProductsContext } from "../context/ProductsContext.js";
 import { ProductFormContext } from "../context/ProductFormContext.js";
 
-function ProductCard({ product }) {
-    const { setProducts } = useContext(ProductsContext);
+function ProductCard({ product = null, setSelectedProductId, selectedProductId = 0 }) {
+    const { products, setProducts } = useContext(ProductsContext);
     const { setProductForm } = useContext(ProductFormContext);
+
+    if (!product) {
+        product = products.find(p => p.id == selectedProductId);
+        if (!product) {
+            setSelectedProductId(0);
+            return;
+        }
+    }
 
     const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false);
 
@@ -22,8 +30,15 @@ function ProductCard({ product }) {
         <h2>{name}</h2>
         <h3>₹{price}</h3>
         <h4>{category}</h4>
-        <p>{description}</p>
-        <h5>{stockQuantity} more left!</h5>
+        {
+            selectedProductId ?
+                <>
+                    <p>{description}</p>
+                    <h5>{stockQuantity} more left!</h5>
+                </>
+                :
+                ''
+        }
         {
             isDeleteBtnClicked ?
                 <div>
@@ -33,6 +48,8 @@ function ProductCard({ product }) {
                 </div>
                 :
                 <>
+
+                    {!selectedProductId && <button onClick={() => setSelectedProductId(id)}>View Product</button>}
                     <button onClick={() => editProduct(product)}>Edit</button>
                     <button onClick={() => setIsDeleteBtnClicked(true)}>Delete</button>
                 </>

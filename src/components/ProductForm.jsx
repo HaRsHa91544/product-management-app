@@ -9,7 +9,8 @@ function ProductForm() {
     const { productForm, setProductForm } = useContext(ProductFormContext);
 
     const errors = {
-        id: !(Number(productForm.id)) ? 'Product ID is required' : '',
+        id: !(Number(productForm.id)) ? 'Product ID is required' :
+            (!productForm.isExists && products.find(p => p.id == Number(productForm.id))) ? 'Product with given ID already exists' : '',
         name: (productForm.name.length < 3) ? 'Product name is invalid' : '',
         price: !(Number(productForm.price)) ? 'Product price should be greater than ₹0' : '',
         category: (productForm.category.length < 3) ? 'Product category is invalid' : '',
@@ -18,7 +19,8 @@ function ProductForm() {
     };
 
     function inputChangeHandler(e) {
-        const { name, value } = e.target;
+        let { name, value, type } = e.target;
+        if (type == 'number' && value) value = Number(value);
         setProductForm((prev) => {
             return { ...prev, [name]: value }
         });
