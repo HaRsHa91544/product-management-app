@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ProductsContext } from "../context/ProductsContext.js";
 import ProductsList from "../components/ProductList.jsx";
 import ProductForm from "../components/ProductForm.jsx";
 import { ProductFormContext } from "../context/ProductFormContext.js";
 
 function App() {
+    console.log('App rendered');
     const [products, setProducts] = useState([
         {
             id: 101,
@@ -45,9 +46,20 @@ function App() {
         isExists: false
     });
 
+    const [count, setCount] = useState(0);
+
+    const productsContextValue = useMemo(() => {
+        return { products, setProducts };
+    }, [products]);
+
+    const productFormContextValue = useMemo(() => {
+        return { productForm, setProductForm };
+    }, [productForm]);
+
     return (
-        <ProductsContext value={{ products, setProducts }}>
-            <ProductFormContext value={{ productForm, setProductForm }}>
+        <ProductsContext value={productsContextValue}>
+            <button onClick={() => setCount(count + 1)}>Count:{count}</button>
+            <ProductFormContext value={productFormContextValue}>
                 <ProductForm></ProductForm>
                 <ProductsList></ProductsList>
             </ProductFormContext>

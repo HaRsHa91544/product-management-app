@@ -1,9 +1,11 @@
-import { useContext } from "react";
+import { memo, useContext } from "react";
 import { ProductsContext } from "../context/ProductsContext.js";
 import { ProductFormContext } from "../context/ProductFormContext.js";
 import InputField from "./ui/InputField.jsx";
 
 function ProductForm() {
+    console.log('PF rendered');
+
     const { products, setProducts } = useContext(ProductsContext);
 
     const { productForm, setProductForm } = useContext(ProductFormContext);
@@ -30,15 +32,20 @@ function ProductForm() {
         e.preventDefault();
 
         if (productForm.isExists) {
-            const index = products.findIndex((p) => p.id == productForm.id);
-            products.splice(index, 1, productForm);
-            setProducts([...products]);
+            /* It is mutating the original state directly which violates the state immutability rule*/
+            // const index = products.findIndex((p) => p.id == productForm.id);
+            // products.splice(index, 1, productForm);
+            // setProducts([...products]);
+            setProducts(products.map(p => {
+                return (p.id != productForm.id) ? p : productForm;
+            }));
         }
         else {
             productForm.isExists = true;
             setProducts([...products, productForm]);
         }
 
+        // Clearing the form
         setProductForm({
             id: 0,
             name: '',
@@ -128,4 +135,4 @@ function ProductForm() {
     </form>;
 }
 
-export default ProductForm;
+export default memo(ProductForm);

@@ -1,9 +1,11 @@
-import { useContext, useState } from "react";
+import { memo, useContext, useState } from "react";
 import { ProductsContext } from "../context/ProductsContext.js";
 import ProductCard from "./ProductCard.jsx";
 import SearchBar from "./SearchBar.jsx";
 
 function ProductsList() {
+    console.log('PL rendered');
+
     const { products } = useContext(ProductsContext);
 
     const [searchValue, setSearchValue] = useState('');
@@ -78,4 +80,4 @@ function ProductsList() {
     </section >;
 }
 
-export default ProductsList;
+export default memo(ProductsList);
