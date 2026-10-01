@@ -3,15 +3,11 @@ import { ProductsContext } from "../context/ProductsContext.js";
 import ProductCard from "./ProductCard.jsx";
 import SearchBar from "./SearchBar.jsx";
 
-function ProductsList() {
-    console.log('PL rendered');
-
+function ProductsList({ setSelectedProductId }) {
     const { products } = useContext(ProductsContext);
 
     const [searchValue, setSearchValue] = useState('');
     const [filterByCategory, setFilterByCategory] = useState('');
-
-    const [selectedProductId, setSelectedProductId] = useState(0);
 
 
     function clearFilterByCategory() {
@@ -40,42 +36,31 @@ function ProductsList() {
     }
 
     return <section>
+        <h1>Products List</h1>
+
+        <SearchBar searchValue={searchValue} setSearchValue={setSearchValue}></SearchBar>
+
+        <select value={filterByCategory} onChange={(e) => setFilterByCategory(e.target.value)}>
+            <option value=''>Select the category</option>
+            {
+                categories.map(c => <option key={c} value={c}>{c}</option>)
+            }
+        </select>
+
+        <button onClick={clearFilterByCategory}>Clear Filter</button>
+
         {
-            selectedProductId ?
-                <>
-                    <h1>Product Details</h1>
-                    <button onClick={() => setSelectedProductId(0)}>Return to Products List</button>
-                    <ProductCard setSelectedProductId={setSelectedProductId} selectedProductId={selectedProductId}></ProductCard>
-                </>
-                :
-                <>
-                    <h1>Products List</h1>
+            filteredProducts.length === 0 &&
+            <h3>No products found!</h3>
+        }
 
-                    <SearchBar searchValue={searchValue} setSearchValue={setSearchValue}></SearchBar>
-
-                    <select value={filterByCategory} onChange={(e) => setFilterByCategory(e.target.value)}>
-                        <option value=''>Select the category</option>
-                        {
-                            categories.map(c => <option key={c} value={c}>{c}</option>)
-                        }
-                    </select>
-
-                    <button onClick={clearFilterByCategory}>Clear Filter</button>
-
-                    {
-                        filteredProducts.length === 0 &&
-                        <h3>No products found!</h3>
-                    }
-
-                    {
-                        filteredProducts.length > 0 &&
-                        <ul>
-                            {
-                                filteredProducts.map(product => <ProductCard setSelectedProductId={setSelectedProductId} key={product.id} product={product} />)
-                            }
-                        </ul>
-                    }
-                </>
+        {
+            filteredProducts.length > 0 &&
+            <ul>
+                {
+                    filteredProducts.map(product => <ProductCard setSelectedProductId={setSelectedProductId} key={product.id} product={product} />)
+                }
+            </ul>
         }
     </section >;
 }
