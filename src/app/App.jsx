@@ -3,9 +3,10 @@ import { ProductsContext } from "../context/ProductsContext.js";
 import ProductsList from "../components/ProductList.jsx";
 import ProductForm from "../components/ProductForm.jsx";
 import { ProductFormContext } from "../context/ProductFormContext.js";
+import ProductDetails from "../components/ProductDetails.jsx";
 
 function App() {
-    console.log('App rendered');
+
     const [products, setProducts] = useState([
         {
             id: 101,
@@ -46,7 +47,9 @@ function App() {
         isExists: false
     });
 
-    const [count, setCount] = useState(0);
+    const [selectedProductId, setSelectedProductId] = useState(null);
+
+    const selectedProduct = products.find(p => p.id === selectedProductId);
 
     const productsContextValue = useMemo(() => {
         return { products, setProducts };
@@ -58,10 +61,19 @@ function App() {
 
     return (
         <ProductsContext value={productsContextValue}>
-            <button onClick={() => setCount(count + 1)}>Count:{count}</button>
             <ProductFormContext value={productFormContextValue}>
                 <ProductForm></ProductForm>
-                <ProductsList></ProductsList>
+                {
+                    selectedProduct ?
+                        <ProductDetails
+                            product={selectedProduct}
+                            setSelectedProductId={setSelectedProductId}>
+                        </ProductDetails>
+                        :
+                        <ProductsList
+                            setSelectedProductId={setSelectedProductId}>
+                        </ProductsList>
+                }
             </ProductFormContext>
         </ProductsContext>
     );

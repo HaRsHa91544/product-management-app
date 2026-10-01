@@ -4,8 +4,6 @@ import { ProductFormContext } from "../context/ProductFormContext.js";
 import InputField from "./ui/InputField.jsx";
 
 function ProductForm() {
-    console.log('PF rendered');
-
     const { products, setProducts } = useContext(ProductsContext);
 
     const { productForm, setProductForm } = useContext(ProductFormContext);

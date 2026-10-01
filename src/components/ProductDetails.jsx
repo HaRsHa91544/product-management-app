@@ -1,17 +1,20 @@
 import { useState } from "react";
 import useProductActions from "../hooks/useProductActions.js";
 
-function ProductCard({ product = null, setSelectedProductId }) {
+function ProductDetails({ product, setSelectedProductId }) {
     const { editProduct, deleteProduct } = useProductActions();
 
     const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false);
 
-    const { id, name, price, category } = product;
+    const { id, name, price, category, description, stockQuantity } = product;
 
     return <li>
+        <button onClick={() => setSelectedProductId(null)}>Back to Products</button>
         <h2>{name}</h2>
         <h3>₹{price}</h3>
         <h4>{category}</h4>
+        <p>{description}</p>
+        <h5>{stockQuantity} more left!</h5>
         {
             isDeleteBtnClicked ?
                 <div>
@@ -21,8 +24,6 @@ function ProductCard({ product = null, setSelectedProductId }) {
                 </div>
                 :
                 <>
-
-                    <button onClick={() => setSelectedProductId(id)}>View Product</button>
                     <button onClick={() => editProduct(product)}>Edit</button>
                     <button onClick={() => setIsDeleteBtnClicked(true)}>Delete</button>
                 </>
@@ -30,4 +31,4 @@ function ProductCard({ product = null, setSelectedProductId }) {
     </li>;
 }
 
-export default ProductCard;
+export default ProductDetails;
