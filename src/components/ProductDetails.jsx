@@ -1,10 +1,7 @@
-import { useState } from "react";
 import useProductActions from "../hooks/useProductActions.js";
 
 function ProductDetails({ product, setSelectedProductId }) {
-    const { editProduct, deleteProduct } = useProductActions();
-
-    const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false);
+    const { isDeleteBtnClicked, setIsDeleteBtnClicked, editProduct, deleteProduct } = useProductActions();
 
     const { id, name, price, category, description, stockQuantity } = product;
 
