@@ -3,8 +3,6 @@ import { ProductsContext } from "../context/ProductsContext.js";
 import { ProductFormContext } from "../context/ProductFormContext.js";
 
 function useProductActions() {
-    const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false);
-
     const { setProducts } = useContext(ProductsContext);
     const { setProductForm } = useContext(ProductFormContext);
 
@@ -16,7 +14,7 @@ function useProductActions() {
         setProductForm(product);
     }
 
-    return { editProduct, deleteProduct, isDeleteBtnClicked, setIsDeleteBtnClicked };
+    return { editProduct, deleteProduct };
 }
 
 export default useProductActions;
