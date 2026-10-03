@@ -1,14 +1,10 @@
-import { memo, useContext, useState } from "react";
+import { memo, useContext } from "react";
 import { ProductsContext } from "../context/ProductsContext.js";
 import ProductCard from "./ProductCard.jsx";
 import SearchBar from "./SearchBar.jsx";
 
-function ProductsList({ setSelectedProductId }) {
+function ProductsList({ searchValue, setSearchValue, filterByCategory, setFilterByCategory, setSelectedProductId }) {
     const { products } = useContext(ProductsContext);
-
-    const [searchValue, setSearchValue] = useState('');
-    const [filterByCategory, setFilterByCategory] = useState('');
-
 
     function clearFilterByCategory() {
         setFilterByCategory('');

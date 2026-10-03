@@ -4,6 +4,7 @@ import ProductsList from "../components/ProductsList.jsx";
 import ProductForm from "../components/ProductForm.jsx";
 import { ProductFormContext } from "../context/ProductFormContext.js";
 import ProductDetails from "../components/ProductDetails.jsx";
+import ProductsLayout from "../components/ProductsLayout.jsx";
 
 function App() {
 
@@ -47,10 +48,6 @@ function App() {
         isExists: false
     });
 
-    const [selectedProductId, setSelectedProductId] = useState(null);
-
-    const selectedProduct = products.find(p => p.id === selectedProductId);
-
     const productsContextValue = useMemo(() => {
         return { products, setProducts };
     }, [products]);
@@ -63,17 +60,7 @@ function App() {
         <ProductsContext value={productsContextValue}>
             <ProductFormContext value={productFormContextValue}>
                 <ProductForm></ProductForm>
-                {
-                    selectedProduct ?
-                        <ProductDetails
-                            product={selectedProduct}
-                            setSelectedProductId={setSelectedProductId}>
-                        </ProductDetails>
-                        :
-                        <ProductsList
-                            setSelectedProductId={setSelectedProductId}>
-                        </ProductsList>
-                }
+                <ProductsLayout></ProductsLayout>
             </ProductFormContext>
         </ProductsContext>
     );

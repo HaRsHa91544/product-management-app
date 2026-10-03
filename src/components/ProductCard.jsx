@@ -1,7 +1,10 @@
+import { useState } from "react";
 import useProductActions from "../hooks/useProductActions.js";
 
 function ProductCard({ product, setSelectedProductId }) {
-    const { isDeleteBtnClicked, setIsDeleteBtnClicked, editProduct, deleteProduct } = useProductActions();
+    const { editProduct, deleteProduct } = useProductActions();
+
+    const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false);
 
     const { id, name, price, category } = product;
 
