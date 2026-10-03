@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { ProductsContext } from "../context/ProductsContext.js";
-import ProductsList from "../components/ProductList.jsx";
+import ProductsList from "../components/ProductsList.jsx";
 import ProductForm from "../components/ProductForm.jsx";
 import { ProductFormContext } from "../context/ProductFormContext.js";
 import ProductDetails from "../components/ProductDetails.jsx";

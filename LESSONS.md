@@ -8,3 +8,5 @@
 4. When the reference state like **array or object is modified** then the **new reference** has to be passed to setter Fn to treat it as change by React.
 
 5. Re-render is a Function call which creates new local variables every time but `useState and useRef` data persists across re-renders.
+
+6. A component should have only single responsibility.
