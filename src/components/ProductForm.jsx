@@ -10,7 +10,9 @@ function ProductForm() {
 
     const errors = {
         id: !(Number(productForm.id)) ? 'Product ID is required' :
-            (!productForm.isExists && products.find(p => p.id == Number(productForm.id))) ? 'Product with given ID already exists' : '',
+            (!productForm.isExists &&
+                products.find(p => p.id == Number(productForm.id))) ?
+                'Product with given ID already exists' : '',
         name: (productForm.name.length < 3) ? 'Product name is invalid' : '',
         price: !(Number(productForm.price)) ? 'Product price should be greater than ₹0' : '',
         category: (productForm.category.length < 3) ? 'Product category is invalid' : '',
@@ -43,7 +45,10 @@ function ProductForm() {
             setProducts([...products, productForm]);
         }
 
-        // Clearing the form
+        clearProductForm();
+    }
+
+    function clearProductForm() {
         setProductForm({
             id: 0,
             name: '',
@@ -117,6 +122,8 @@ function ProductForm() {
             changeHandler={inputChangeHandler}
             errors={errors.stockQuantity}
         ></InputField>
+
+        <button type="button" onClick={() => clearProductForm()}>Reset</button>
 
         <button
             type="submit"
