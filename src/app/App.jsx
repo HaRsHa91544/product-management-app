@@ -1,13 +1,10 @@
 import { useMemo, useState } from "react";
 import { ProductsContext } from "../context/ProductsContext.js";
-import ProductsList from "../components/ProductsList.jsx";
-import ProductForm from "../components/ProductForm.jsx";
 import { ProductFormContext } from "../context/ProductFormContext.js";
-import ProductDetails from "../components/ProductDetails.jsx";
-import ProductsLayout from "../components/ProductsLayout.jsx";
+import ProductForm from "../components/ProductForm.jsx";
+import ProductsView from "../components/ProductsView.jsx";
 
 function App() {
-
     const [products, setProducts] = useState([
         {
             id: 101,
@@ -60,7 +57,7 @@ function App() {
         <ProductsContext value={productsContextValue}>
             <ProductFormContext value={productFormContextValue}>
                 <ProductForm></ProductForm>
-                <ProductsLayout></ProductsLayout>
+                <ProductsView></ProductsView>
             </ProductFormContext>
         </ProductsContext>
     );

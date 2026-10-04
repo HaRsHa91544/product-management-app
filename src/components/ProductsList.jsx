@@ -10,33 +10,41 @@ function ProductsList({ searchValue, setSearchValue, filterByCategory, setFilter
         setFilterByCategory('');
     }
 
+    
     const categories = Array.from(new Set(products.map(p => p.category)));
-
-    /* 
-        To check the selected category really exists in the current product's categories.
-        It is useful when all products of a category are removed and filterByCategory still
-        stored the deleted category.
-    */
-    if (filterByCategory && !categories.includes(filterByCategory)) {
-        clearFilterByCategory();
-    }
-
 
     let filteredProducts = products;
 
     if (filterByCategory) {
-        filteredProducts = products.filter(p => p.category == filterByCategory)
+        filteredProducts = products.filter(p => p.category == filterByCategory);
     }
+
     if (searchValue) {
-        filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(searchValue.toLowerCase()))
+        filteredProducts = filteredProducts
+            .filter(p => p.name.toLowerCase().includes(searchValue.toLowerCase()));
     }
+
+
+    let validationError = '';
+
+    if (products.length === 0)
+        validationError = 'No products available';
+
+    else if (filterByCategory && !categories.includes(filterByCategory))
+        validationError = 'The selected filter is no longer valid, clear the filter';
+
+    else if (filteredProducts.length === 0 && searchValue)
+        validationError = 'No products found for your search';
+
 
     return <section>
         <h1>Products List</h1>
 
         <SearchBar searchValue={searchValue} setSearchValue={setSearchValue}></SearchBar>
 
-        <select value={filterByCategory} onChange={(e) => setFilterByCategory(e.target.value)}>
+        <select
+            value={filterByCategory}
+            onChange={(e) => setFilterByCategory(e.target.value)}>
             <option value=''>Select the category</option>
             {
                 categories.map(c => <option key={c} value={c}>{c}</option>)
@@ -46,8 +54,7 @@ function ProductsList({ searchValue, setSearchValue, filterByCategory, setFilter
         <button onClick={clearFilterByCategory}>Clear Filter</button>
 
         {
-            filteredProducts.length === 0 &&
-            <h3>No products found!</h3>
+            validationError && <h3>{validationError}</h3>
         }
 
         {

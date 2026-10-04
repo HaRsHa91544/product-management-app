@@ -1,16 +1,19 @@
-import { useContext, useState } from "react"
+import { useContext, useState } from "react";
 import ProductDetails from "./ProductDetails.jsx";
 import ProductsList from "./ProductsList.jsx";
 import { ProductsContext } from "../context/ProductsContext.js";
 
-function ProductsLayout() {
+function ProductsView() {
     const { products } = useContext(ProductsContext);
-
+    
+    // States which are living here for the persistence 
     const [selectedProductId, setSelectedProductId] = useState(null);
     const [searchValue, setSearchValue] = useState('');
     const [filterByCategory, setFilterByCategory] = useState('');
+    //---------------------------------------------------------------
 
-    const selectedProduct = (selectedProductId) ? products.find(p => p.id === selectedProductId) : null;
+    const selectedProduct = (selectedProductId) ?
+        products.find(p => p.id === selectedProductId) : null;
 
     if (selectedProduct) {
         return <ProductDetails
@@ -28,4 +31,4 @@ function ProductsLayout() {
     </ProductsList>;
 }
 
-export default ProductsLayout;
+export default ProductsView;
