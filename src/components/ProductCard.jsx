@@ -20,12 +20,11 @@ function ProductCard({ product, setSelectedProductId }) {
                     <button onClick={() => setIsDeleteBtnClicked(false)}>No</button>
                 </div>
                 :
-                <>
-
+                <div>
                     <button onClick={() => setSelectedProductId(id)}>View Product</button>
                     <button onClick={() => editProduct(product)}>Edit</button>
                     <button onClick={() => setIsDeleteBtnClicked(true)}>Delete</button>
-                </>
+                </div>
         }
     </li>;
 }

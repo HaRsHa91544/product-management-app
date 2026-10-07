@@ -7,4 +7,6 @@ export default function validateProducts(products, filteredProducts, categories,
 
     else if (filteredProducts.length === 0 && searchValue)
         return 'No products found for your search';
+    
+    return '';
 }

@@ -2,16 +2,19 @@ import { memo, useContext } from "react";
 import { ProductsContext } from "../context/ProductsContext.js";
 import { ProductFormContext } from "../context/ProductFormContext.js";
 import InputField from "./ui/InputField.jsx";
+import useProductActions from "../hooks/useProductActions.js";
 
 function ProductForm() {
-    const { products, setProducts } = useContext(ProductsContext);
+    const { products } = useContext(ProductsContext);
 
     const { productForm, setProductForm } = useContext(ProductFormContext);
+
+    const { saveProduct } = useProductActions();
 
     const errors = {
         id: !(Number(productForm.id)) ? 'Product ID is required' :
             (!productForm.isExists &&
-                products.find(p => p.id == Number(productForm.id))) ?
+                products.find(p => p.id === Number(productForm.id))) ?
                 'Product with given ID already exists' : '',
         name: (productForm.name.length < 3) ? 'Product name is invalid' : '',
         price: !(Number(productForm.price)) ? 'Product price should be greater than ₹0' : '',
@@ -22,7 +25,7 @@ function ProductForm() {
 
     function inputChangeHandler(e) {
         let { name, value, type } = e.target;
-        if (type == 'number' && value) value = Number(value);
+        if (type === 'number' && value) value = Number(value);
         setProductForm((prev) => {
             return { ...prev, [name]: value }
         });
@@ -30,21 +33,7 @@ function ProductForm() {
 
     function productSubmitHandler(e) {
         e.preventDefault();
-
-        if (productForm.isExists) {
-            /* It is mutating the original state directly which violates the state immutability rule*/
-            // const index = products.findIndex((p) => p.id == productForm.id);
-            // products.splice(index, 1, productForm);
-            // setProducts([...products]);
-            setProducts(products.map(p => {
-                return (p.id != productForm.id) ? p : productForm;
-            }));
-        }
-        else {
-            productForm.isExists = true;
-            setProducts([...products, productForm]);
-        }
-
+        saveProduct(productForm);
         clearProductForm();
     }
 
@@ -134,8 +123,8 @@ function ProductForm() {
                 errors.description ||
                 errors.category ||
                 errors.stockQuantity
-            }
-        >{(productForm.isExists) ? 'Update Product' : 'Add Product'}
+            }>
+            {(productForm.isExists) ? 'Update Product' : 'Add Product'}
         </button>
     </form>;
 }

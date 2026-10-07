@@ -17,13 +17,6 @@ function ProductsView() {
     //---------------------------------------------------------------
 
 
-    const categories = Array.from(new Set(products.map(p => p.category)));
-
-    const filteredProducts = filterProducts(products, category, searchValue);
-
-    const validationError = validateProducts(products, filteredProducts, categories, category, searchValue);
-
-
     const selectedProduct = (selectedProductId) ?
         products.find(p => p.id === selectedProductId) : null;
 
@@ -34,6 +27,18 @@ function ProductsView() {
         </ProductDetails>;
     }
 
+
+    const categories = Array.from(new Set(products.map(p => p.category)));
+
+    const filteredProducts = filterProducts(products, category, searchValue);
+
+    const validationError = validateProducts(
+        products,
+        filteredProducts,
+        categories,
+        category,
+        searchValue
+    );
 
     return <section>
         <SearchBar
