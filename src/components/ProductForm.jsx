@@ -3,6 +3,7 @@ import { ProductsContext } from "../context/ProductsContext.js";
 import { ProductFormContext } from "../context/ProductFormContext.js";
 import InputField from "./ui/InputField.jsx";
 import useProductActions from "../hooks/useProductActions.js";
+import validateProductForm from "../utils/validateProductForm.js";
 
 function ProductForm() {
     const { products } = useContext(ProductsContext);
@@ -11,21 +12,15 @@ function ProductForm() {
 
     const { saveProduct } = useProductActions();
 
-    const errors = {
-        id: !(Number(productForm.id)) ? 'Product ID is required' :
-            (!productForm.isExists &&
-                products.find(p => p.id === Number(productForm.id))) ?
-                'Product with given ID already exists' : '',
-        name: (productForm.name.length < 3) ? 'Product name is invalid' : '',
-        price: !(Number(productForm.price)) ? 'Product price should be greater than ₹0' : '',
-        category: (productForm.category.length < 3) ? 'Product category is invalid' : '',
-        description: (productForm.description.length < 3) ? 'Product description is invalid' : '',
-        stockQuantity: !(Number(productForm.stockQuantity)) ? 'Product stock should be greater than 0' : ''
-    };
+    const validationErrors = validateProductForm(productForm, products);
 
     function inputChangeHandler(e) {
         let { name, value, type } = e.target;
-        if (type === 'number' && value) value = Number(value);
+
+        if (type === 'number' && value) {
+            value = Number(value);
+        }
+
         setProductForm((prev) => {
             return { ...prev, [name]: value }
         });
@@ -59,7 +54,7 @@ function ProductForm() {
             value={productForm.id}
             changeHandler={inputChangeHandler}
             readOnly={productForm.isExists}
-            errors={errors.id}
+            errors={validationErrors.id}
         ></InputField>
 
         <InputField
@@ -69,7 +64,7 @@ function ProductForm() {
             id={'name'}
             value={productForm.name}
             changeHandler={inputChangeHandler}
-            errors={errors.name}
+            errors={validationErrors.name}
         ></InputField>
 
         <InputField
@@ -79,7 +74,7 @@ function ProductForm() {
             id={'price'}
             value={productForm.price}
             changeHandler={inputChangeHandler}
-            errors={errors.price}
+            errors={validationErrors.price}
         ></InputField>
 
         <InputField
@@ -89,7 +84,7 @@ function ProductForm() {
             id={'category'}
             value={productForm.category}
             changeHandler={inputChangeHandler}
-            errors={errors.category}
+            errors={validationErrors.category}
         ></InputField>
 
         <InputField
@@ -99,7 +94,7 @@ function ProductForm() {
             id={'description'}
             value={productForm.description}
             changeHandler={inputChangeHandler}
-            errors={errors.description}
+            errors={validationErrors.description}
         ></InputField>
 
         <InputField
@@ -109,7 +104,7 @@ function ProductForm() {
             id={'stockQuantity'}
             value={productForm.stockQuantity}
             changeHandler={inputChangeHandler}
-            errors={errors.stockQuantity}
+            errors={validationErrors.stockQuantity}
         ></InputField>
 
         <button type="button" onClick={() => clearProductForm()}>Reset</button>
@@ -117,12 +112,12 @@ function ProductForm() {
         <button
             type="submit"
             disabled={
-                errors.id ||
-                errors.name ||
-                errors.price ||
-                errors.description ||
-                errors.category ||
-                errors.stockQuantity
+                validationErrors.id ||
+                validationErrors.name ||
+                validationErrors.price ||
+                validationErrors.description ||
+                validationErrors.category ||
+                validationErrors.stockQuantity
             }>
             {(productForm.isExists) ? 'Update Product' : 'Add Product'}
         </button>
