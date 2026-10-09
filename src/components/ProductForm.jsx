@@ -11,9 +11,21 @@ function ProductForm() {
     const { productForm, setProductForm } = useContext(ProductFormContext);
 
     const { saveProduct } = useProductActions();
-
+    
     const validationErrors = validateProductForm(productForm, products);
-
+    
+    function clearProductForm() {
+        setProductForm({
+            id: 0,
+            name: '',
+            price: 0,
+            category: '',
+            description: '',
+            stockQuantity: 0,
+            isExists: false
+        });
+    }
+    
     function inputChangeHandler(e) {
         let { name, value, type } = e.target;
 
@@ -30,18 +42,6 @@ function ProductForm() {
         e.preventDefault();
         saveProduct(productForm);
         clearProductForm();
-    }
-
-    function clearProductForm() {
-        setProductForm({
-            id: 0,
-            name: '',
-            price: 0,
-            category: '',
-            description: '',
-            stockQuantity: 0,
-            isExists: false
-        });
     }
 
     return <form onSubmit={productSubmitHandler}>
