@@ -3,6 +3,7 @@ import { ProductsContext } from "../context/ProductsContext.js";
 import { ProductFormContext } from "../context/ProductFormContext.js";
 import ProductForm from "../components/ProductForm.jsx";
 import ProductsView from "../components/ProductsView.jsx";
+import Header from "../components/Header.jsx";
 
 function App() {
     const [products, setProducts] = useState([
@@ -56,6 +57,7 @@ function App() {
     return (
         <ProductsContext value={productsContextValue}>
             <ProductFormContext value={productFormContextValue}>
+                <Header></Header>
                 <ProductForm></ProductForm>
                 <ProductsView></ProductsView>
             </ProductFormContext>

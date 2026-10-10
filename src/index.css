@@ -1,0 +1,40 @@
+:root {
+    /* Base */
+    --color-background: #ffffff;
+    --color-surface: #F8FAF8;
+
+    /* Primary — Forest Green */
+    --color-primary: #166534;
+    --color-primary-hover: #14532D;
+    --color-primary-light: #DCFCE7;
+    --color-primary-extra-light: #ffffff;
+
+    /* Text */
+    --color-text-primary: #17231B;
+    --color-text-secondary: #647067;
+
+    /* Borders */
+    --color-border: #E2E8E3;
+
+    /* Status */
+    --color-success: #527653;
+    --color-danger: #B6534B;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Outfit';
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Oswald';
+    font-weight: 600;
+}
+
+body {
+    background-color: var(--color-background);
+}

@@ -12,9 +12,12 @@ function ProductsList({ products, validationError, setSelectedProductId }) {
             products.length > 0 &&
             <ul>
                 {
-                    products.map(product => <ProductCard
-                        setSelectedProductId={setSelectedProductId}
-                        key={product.id} product={product} />)
+                    products.map(product => (
+                        <ProductCard
+                            setSelectedProductId={setSelectedProductId}
+                            key={product.id} product={product}
+                        />)
+                    )
                 }
             </ul>
         }
