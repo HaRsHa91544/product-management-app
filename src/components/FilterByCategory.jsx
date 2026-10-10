@@ -19,7 +19,7 @@ function FilterByCategory({ categories, category, setCategory }) {
         <button
             className='action-negative-btn'
             onClick={clearCategory}>
-            Clear Filter
+            Clear
         </button>
     </div>;
 }

@@ -6,6 +6,7 @@ import SearchBar from "./SearchBar.jsx";
 import filterProducts from "../utils/filterProducts.js";
 import validateProducts from "../utils/validateProducts.js";
 import FilterByCategory from "./FilterByCategory.jsx";
+import '../styles/products-view.css';
 
 function ProductsView() {
     const { products } = useContext(ProductsContext);
@@ -41,16 +42,18 @@ function ProductsView() {
     );
 
     return <section>
-        <SearchBar
-            searchValue={searchValue}
-            setSearchValue={setSearchValue}>
-        </SearchBar>
+        <section className="search-filter-container">
+            <SearchBar
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}>
+            </SearchBar>
 
-        <FilterByCategory
-            categories={categories}
-            category={category}
-            setCategory={setCategory}>
-        </FilterByCategory>
+            <FilterByCategory
+                categories={categories}
+                category={category}
+                setCategory={setCategory}>
+            </FilterByCategory>
+        </section>
 
         <ProductsList
             products={filteredProducts}
