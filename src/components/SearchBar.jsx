@@ -1,4 +1,5 @@
 import InputField from "./ui/InputField.jsx";
+import '../styles/search-bar.css';
 
 function SearchBar({ searchValue, setSearchValue }) {
 
@@ -7,14 +8,17 @@ function SearchBar({ searchValue, setSearchValue }) {
         setSearchValue(value);
     }
 
-    return <InputField
-        type={'text'}
-        name={'searchInput'}
-        id={'searchInput'}
-        value={searchValue}
-        changeHandler={searchInputHandler}
-        placeholder={'Search for product'}
-    ></InputField>;
+    return <div className="search-container">
+        <InputField
+            className='input-field'
+            type={'text'}
+            name={'searchInput'}
+            id={'searchInput'}
+            value={searchValue}
+            changeHandler={searchInputHandler}
+            placeholder={'Search for product'}
+        ></InputField>
+    </div>;
 }
 
 export default SearchBar;

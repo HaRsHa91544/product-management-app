@@ -1,11 +1,14 @@
+import '../styles/filter-by-category.css';
+
 function FilterByCategory({ categories, category, setCategory }) {
-    
+
     function clearCategory() {
         setCategory('');
     }
 
-    return <div>
+    return <div className="filter-by-category-container">
         <select
+            className="input-field"
             value={category}
             onChange={(e) => setCategory(e.target.value)}>
             <option value=''>Select the category</option>
@@ -13,7 +16,11 @@ function FilterByCategory({ categories, category, setCategory }) {
                 categories.map(c => <option key={c} value={c}>{c}</option>)
             }
         </select>
-        <button onClick={clearCategory}>Clear Filter</button>
+        <button
+            className='action-negative-btn'
+            onClick={clearCategory}>
+            Clear Filter
+        </button>
     </div>;
 }
 

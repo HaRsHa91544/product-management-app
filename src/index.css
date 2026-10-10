@@ -5,8 +5,8 @@
 
     /* Primary — Forest Green */
     --color-primary: #166534;
-    --color-primary-hover: #14532D;
-    --color-primary-light: #DCFCE7;
+    --color-primary-hover: #0e4122;
+    --color-primary-light: #ebfff2;
     --color-primary-extra-light: #ffffff;
 
     /* Text */
@@ -17,8 +17,10 @@
     --color-border: #E2E8E3;
 
     /* Status */
-    --color-success: #527653;
-    --color-danger: #B6534B;
+    --color-danger: #d82e22;
+    --color-danger-hover: #c41e12;
+
+    --section-padding: clamp(1rem, 1.5vw, 1.2rem) clamp(1.5rem, 3vw, 2rem);
 }
 
 * {
@@ -26,6 +28,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Outfit';
+    font-weight: 400;
 }
 
 h1,
@@ -37,4 +40,54 @@ h3 {
 
 body {
     background-color: var(--color-background);
+}
+
+button {
+    padding: clamp(0.5rem, 0.6vw, 1rem) clamp(1rem, 1.5vw, 1.5rem);
+    font-size: 0.9rem;
+    border: none;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.input-field {
+    padding: clamp(0.6rem, 0.8vw, 1.1rem) clamp(1rem, 1.5vw, 1.5rem) clamp(0.6rem, 0.7vw, 1.1rem) 0.75rem;
+    font-size: 0.95rem;
+    outline: none;
+    border: 2px solid var(--color-border);
+    transition: all 0.3s ease-in-out;
+}
+
+.input-field:focus {
+    border: 2px solid var(--color-primary);
+}
+
+.action-positive-btn {
+    border: 1px solid var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-primary-extra-light);
+}
+
+.action-positive-btn:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.action-negative-btn {
+    border: 1px solid var(--color-danger);
+    background-color: var(--color-danger);
+    color: var(--color-primary-extra-light);
+}
+
+.action-negative-btn:hover {
+    background-color: var(--color-danger-hover);
+}
+
+.action-neutral-btn {
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    background-color: var(--color-background);
+}
+
+.action-neutral-btn:hover {
+    background-color: var(--color-primary-light);
 }

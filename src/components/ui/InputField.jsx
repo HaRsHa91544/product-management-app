@@ -1,4 +1,4 @@
-function InputField({ label, type, id, name, value, placeholder, changeHandler,
+function InputField({ className, label, type, id, name, value, placeholder, changeHandler,
     readOnly = false, errors }) {
     return <div>
         <label
@@ -7,6 +7,7 @@ function InputField({ label, type, id, name, value, placeholder, changeHandler,
         </label>
 
         <input
+            className={className}
             type={type}
             name={name}
             id={id}

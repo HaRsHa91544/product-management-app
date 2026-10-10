@@ -1,0 +1,5 @@
+.filter-by-category-container {
+    padding: var(--section-padding);
+    display: flex;
+    gap: 2rem;
+}
