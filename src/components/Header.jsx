@@ -1,9 +1,13 @@
 import '../styles/header.css';
 
-function Header() {
+function Header({ setFormOpened }) {
     return <header>
         <h1 className='header-title'>Product Management App</h1>
-        <button className='action-positive-btn'>+ Product</button>
+        <button
+            onClick={() => setFormOpened(true)}
+            className='action-positive-btn'>
+            + Product
+        </button>
     </header>;
 }
 

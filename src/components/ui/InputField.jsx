@@ -1,13 +1,14 @@
-function InputField({ className, label, type, id, name, value, placeholder, changeHandler,
+function InputField({ label, type, id, name, value, placeholder, changeHandler,
     readOnly = false, errors }) {
-    return <div>
+    return <div className="input-box">
         <label
+            className="input-label"
             htmlFor={id}
         >{label}
         </label>
 
         <input
-            className={className}
+            className='input-field'
             type={type}
             name={name}
             id={id}
@@ -17,7 +18,7 @@ function InputField({ className, label, type, id, name, value, placeholder, chan
             placeholder={placeholder}
         />
 
-        {errors && <p>{errors}</p>}
+        {errors && <span className="input-error">{errors}</span>}
     </div>;
 }
 

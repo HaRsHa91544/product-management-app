@@ -10,7 +10,6 @@ function SearchBar({ searchValue, setSearchValue }) {
 
     return <div className="search-container">
         <InputField
-            className='input-field'
             type={'text'}
             name={'searchInput'}
             id={'searchInput'}

@@ -199,6 +199,8 @@ function App() {
         isExists: false
     });
 
+    const [formOpened, setFormOpened] = useState(false);
+
     const productsContextValue = useMemo(() => {
         return { products, setProducts };
     }, [products]);
@@ -210,8 +212,8 @@ function App() {
     return (
         <ProductsContext value={productsContextValue}>
             <ProductFormContext value={productFormContextValue}>
-                <Header></Header>
-                {/* <ProductForm></ProductForm> */}
+                <Header setFormOpened={setFormOpened}></Header>
+                {formOpened && <ProductForm setFormOpened={setFormOpened}></ProductForm>}
                 <ProductsView></ProductsView>
             </ProductFormContext>
         </ProductsContext>
