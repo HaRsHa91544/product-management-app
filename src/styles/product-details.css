@@ -1,0 +1,34 @@
+.product-details-container {
+    padding: var(--section-padding);
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 1.5rem;
+}
+
+.product-details-container .product-name {
+    font-size: clamp(2.25rem, 6vw, 3.25rem);
+}
+
+.product-details-container .product-price {
+    font-family: 'Outfit';
+    font-weight: 500;
+    font-size: clamp(3rem, 10vw, 4.5rem);
+}
+
+.product-details-container .product-category {
+    color: var(--color-text-secondary);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.product-details-container .product-description {
+    color: var(--color-text-secondary);
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    font-weight: 300;
+}
+
+.product-details-container .product-stock-quantity {
+    color: var(--color-danger);
+    font-size: clamp(1.25rem, 3vw, 1.5rem);
+    font-weight: 600;
+}
