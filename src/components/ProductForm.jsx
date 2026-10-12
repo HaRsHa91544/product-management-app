@@ -46,21 +46,25 @@ function ProductForm() {
         clearProductForm();
     }
 
-    function closeFormOverlay(e) {
-        if (e.target.classList.contains('form-overlay')) {
+    function closeProductForm(e) {
+        const elementClassList = e.target.classList;
+        if (elementClassList.contains('form-overlay') ||
+            elementClassList.contains('action-negative-btn')) {
             setFormOpened(false);
+            clearProductForm();
         }
     }
 
-    return <div className="form-overlay" onClick={closeFormOverlay}>
+    return <div className="form-overlay" onClick={closeProductForm}>
         <div className="form-container">
             <form className="product-form" onSubmit={productSubmitHandler}>
                 <h2 className="product-form-heading">Product Form</h2>
 
                 <button
-                    onClick={() => setFormOpened(false)}
-                    className="action-negative-btn"
-                >Close</button>
+                    onClick={closeProductForm}
+                    className="action-negative-btn">
+                    Close
+                </button>
 
                 <InputField
                     label={'Product ID'}
