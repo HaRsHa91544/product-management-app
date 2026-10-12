@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ProductsContext } from "../context/ProductsContext.js";
 import { ProductFormContext } from "../context/ProductFormContext.js";
+import { ProductFormOpenContext } from "../context/ProductFormOpenContext.js";
 import ProductForm from "../components/ProductForm.jsx";
 import ProductsView from "../components/ProductsView.jsx";
 import Header from "../components/Header.jsx";
@@ -209,12 +210,20 @@ function App() {
         return { productForm, setProductForm };
     }, [productForm]);
 
+    const productFormOpenContextValue = useMemo(() => {
+        return { formOpened, setFormOpened };
+    }, [formOpened]);
+
     return (
         <ProductsContext value={productsContextValue}>
             <ProductFormContext value={productFormContextValue}>
-                <Header setFormOpened={setFormOpened}></Header>
-                {formOpened && <ProductForm setFormOpened={setFormOpened}></ProductForm>}
-                <ProductsView></ProductsView>
+                <ProductFormOpenContext value={productFormOpenContextValue}>
+                    <Header></Header>
+                    {
+                        formOpened && <ProductForm></ProductForm>
+                    }
+                    <ProductsView></ProductsView>
+                </ProductFormOpenContext>
             </ProductFormContext>
         </ProductsContext>
     );

@@ -33,6 +33,7 @@
 
 html {
     scrollbar-width: thin;
+    scroll-behavior: smooth;
     scrollbar-color: var(--color-primary) var(--color-surface);
 }
 
@@ -45,6 +46,7 @@ h3 {
 
 body {
     background-color: var(--color-background);
+    position: relative;
 }
 
 button {

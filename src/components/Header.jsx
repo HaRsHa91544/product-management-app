@@ -1,6 +1,9 @@
+import { useContext } from 'react';
+import { ProductFormOpenContext } from '../context/ProductFormOpenContext.js';
 import '../styles/header.css';
 
-function Header({ setFormOpened }) {
+function Header() {
+    const { setFormOpened } = useContext(ProductFormOpenContext);
     return <header>
         <h1 className='header-title'>Product Management App</h1>
         <button
