@@ -1,7 +1,7 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import ProductDetails from "./ProductDetails.jsx";
 import ProductsList from "./ProductsList.jsx";
-import { ProductsContext } from "../context/ProductsContext.js";
+import { useProducts } from "../context/ProductsContext.jsx";
 import SearchBar from "./SearchBar.jsx";
 import filterProducts from "../utils/filterProducts.js";
 import validateProducts from "../utils/validateProducts.js";
@@ -9,7 +9,7 @@ import FilterByCategory from "./FilterByCategory.jsx";
 import '../styles/products-view.css';
 
 function ProductsView() {
-    const { products } = useContext(ProductsContext);
+    const { products } = useProducts();
 
     // States which are living here for the persistence 
     const [selectedProductId, setSelectedProductId] = useState(null);

@@ -1,16 +1,21 @@
-import { memo, useContext } from "react";
-import { ProductsContext } from "../context/ProductsContext.js";
-import { ProductFormContext } from "../context/ProductFormContext.js";
+import { memo } from "react";
+import { useProducts } from "../context/ProductsContext.jsx";
+import { useProductForm } from "../context/ProductFormContext.jsx";
 import InputField from "./ui/InputField.jsx";
 import useProductActions from "../hooks/useProductActions.js";
 import validateProductForm from "../utils/validateProductForm.js";
 import '../styles/product-form.css';
-import { ProductFormOpenContext } from "../context/ProductFormOpenContext.js";
+import { useProductFormOpen } from "../context/ProductFormOpenContext.jsx";
 
 function ProductForm() {
-    const { products } = useContext(ProductsContext);
-    const { productForm, setProductForm } = useContext(ProductFormContext);
-    const { setFormOpened } = useContext(ProductFormOpenContext);
+    const { products } = useProducts();
+    const { productForm, setProductForm } = useProductForm();
+    const { formOpened, setFormOpened } = useProductFormOpen();
+
+    // When form is not opened then don't render anything
+    if (!formOpened) {
+        return;
+    }
 
     const { saveProduct } = useProductActions();
 
@@ -26,6 +31,16 @@ function ProductForm() {
             stockQuantity: 0,
             isExists: false
         });
+    }
+
+    function closeProductForm(e) {
+        const elementClassList = e.target.classList;
+
+        if (elementClassList.contains('form-overlay') ||
+            elementClassList.contains('action-negative-btn')) {
+            setFormOpened(false);
+            clearProductForm();
+        }
     }
 
     function inputChangeHandler(e) {
@@ -46,21 +61,13 @@ function ProductForm() {
         clearProductForm();
     }
 
-    function closeProductForm(e) {
-        const elementClassList = e.target.classList;
-        if (elementClassList.contains('form-overlay') ||
-            elementClassList.contains('action-negative-btn')) {
-            setFormOpened(false);
-            clearProductForm();
-        }
-    }
-
-    return <div className="form-overlay" onClick={closeProductForm}>
+    return <div className='form-overlay' onClick={closeProductForm}>
         <div className="form-container">
             <form className="product-form" onSubmit={productSubmitHandler}>
                 <h2 className="product-form-heading">Product Form</h2>
 
                 <button
+                    type="button"
                     onClick={closeProductForm}
                     className="action-negative-btn">
                     Close

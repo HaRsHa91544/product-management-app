@@ -1,13 +1,12 @@
-import { useContext } from "react";
-import { ProductsContext } from "../context/ProductsContext.js";
-import { ProductFormContext } from "../context/ProductFormContext.js";
-import { ProductFormOpenContext } from "../context/ProductFormOpenContext.js";
+import { useProducts } from "../context/ProductsContext.jsx";
+import { useProductForm } from "../context/ProductFormContext.jsx";
+import { useProductFormOpen } from "../context/ProductFormOpenContext.jsx";
 
 function useProductActions() {
-    const { products, setProducts } = useContext(ProductsContext);
-    const { setProductForm } = useContext(ProductFormContext);
-    const { setFormOpened } = useContext(ProductFormOpenContext);
-
+    const { products, setProducts } = useProducts();
+    const { setProductForm } = useProductForm();
+    const { setFormOpened } = useProductFormOpen();
+    
     function saveProduct(product) {
         // Updates the existing product
         if (product.isExists) {
