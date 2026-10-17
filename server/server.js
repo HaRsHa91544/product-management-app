@@ -185,47 +185,62 @@ const products = [
     }
 ];
 
+server.use(express.json());
+
 server.get('/products', (req, res) => {
     res.status(200).json({ products });
 });
 
-server.post('/products', express.json(), (req, res) => {
+server.post('/products', (req, res) => {
     const product = req.body;
 
     if (!product.name ||
         !product.price ||
         !product.stockQuantity ||
-        !product.category || !product.description
+        !product.category ||
+        !product.description
     ) {
         return res.json({ error: 'Invalid product' });
     }
 
     product.id = products.length + 101;
     products.push(product);
-    return res.json(product);
+    return res.status(201).json(product);
 });
 
-server.put('/products/:id', express.json(), (req, res) => {
+server.put('/products/:id', (req, res) => {
     const { id } = req.params;
     const updatedProduct = req.body;
 
     const index = products.findIndex(p => p.id === Number(id));
     if (index == -1) {
-        return res.json({ error: 'Product not found' });
+        return res.status(404).json({ error: 'Product not found' });
     }
+
+    if (!updatedProduct.name ||
+        !updatedProduct.price ||
+        !updatedProduct.stockQuantity ||
+        !updatedProduct.category ||
+        !updatedProduct.description
+    ) {
+        return res.status(400).json({ error: 'Invalid product' });
+    }
+
     updatedProduct.id = Number(id);
     products[index] = updatedProduct;
-    return res.json(products[index]);
+    return res.status(200).json(products[index]);
 });
 
-server.delete('/products/:id', express.json(), (req, res) => {
+server.delete('/products/:id', (req, res) => {
     const { id } = req.params;
     const index = products.findIndex(p => p.id === Number(id));
+
     if (index == -1) {
-        return res.json({ error: 'Product not found' });
+        return res.status(404).json({ error: 'Product not found' });
     }
+
     products.splice(index, 1);
-    return res.json({ message: 'Product deleted' });
+    return res.status(204).json({ message: 'Product deleted' });
 });
 
 server.listen(6969, () => {
