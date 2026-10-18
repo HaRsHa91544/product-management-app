@@ -1,4 +1,11 @@
 import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import Product from './models/Product.js';
+
+dotenv.config();
+
+const { PORT, MONGODB_URI } = process.env;
 
 const server = express();
 
@@ -187,7 +194,8 @@ const products = [
 
 server.use(express.json());
 
-server.get('/products', (req, res) => {
+server.get('/products', async (req, res) => {
+    const products = await Product.find();
     res.status(200).json({ products });
 });
 
@@ -243,6 +251,14 @@ server.delete('/products/:id', (req, res) => {
     return res.status(204).json({ message: 'Product deleted' });
 });
 
-server.listen(6969, () => {
+server.listen(PORT, async () => {
     console.log('Server uriking on 6969!');
+    try {
+        await mongoose.connect(MONGODB_URI);
+        console.log('Connected to MongoDB Cluster!');
+    }
+    catch (e) {
+        console.log('Failed to connect to MongoDB Cluster!');
+        console.log(e);
+    }
 });
