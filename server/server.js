@@ -1,9 +1,12 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import Product from './models/Product.js';
-import getModelErrors from './utils/getModelErrors.js';
-import sendResponse from './utils/sendResponse.js';
+import getProducts from './controllers/getProducts.js';
+import addProduct from './controllers/addProduct.js';
+import updateProduct from './controllers/updateProduct.js';
+import deleteProduct from './controllers/deleteProduct.js';
+import requestValidator from './middlewares/requestValidator.js';
+import addProductValidator from './validators/addProductValidator.js';
 
 dotenv.config();
 
@@ -13,111 +16,13 @@ const server = express();
 
 server.use(express.json());
 
-server.get('/products', async (req, res) => {
-    const products = await Product.find();
-    return sendResponse(
-        res,
-        200,
-        true,
-        'Products fetched successfully',
-        products
-    );
-});
+server.get('/products', getProducts);
 
-server.post('/products', async (req, res) => {
-    const product = req.body;
-    try {
-        const newProduct = await Product.create(product);
-        return sendResponse(
-            res,
-            201,
-            true,
-            'Product created successfully',
-            newProduct
-        );
-    }
-    catch (error) {
-        if (error instanceof mongoose.Error)
-            return sendResponse(
-                res,
-                400,
-                false,
-                'Product input data is invalid',
-                null,
-                getModelErrors(error)
-            );
-    }
-});
+server.post('/products', requestValidator(addProductValidator), addProduct);
 
-server.put('/products/:id', async (req, res) => {
-    const { id } = req.params;
-    if (!id)
-        return sendResponse(
-            res,
-            400,
-            false,
-            'Product id is not provided'
-        );
+server.put('/products/:id', updateProduct);
 
-    const product = req.body;
-    try {
-        const updatedProduct = await Product.findByIdAndUpdate(id, product,
-            { runValidators: true }
-        );
-        return sendResponse(
-            res,
-            200,
-            true,
-            'Product updated successfully',
-            updatedProduct
-        );
-    }
-    catch (error) {
-        if (error instanceof mongoose.Error)
-            return sendResponse(
-                res,
-                400,
-                false,
-                'Product input data is invalid',
-                null,
-                getModelErrors(error)
-            );
-    }
-});
-
-server.delete('/products/:id', async (req, res) => {
-    const { id } = req.params;
-    if (!id)
-        return sendResponse(
-            res,
-            400,
-            false,
-            'Product id is not provided'
-        );
-
-    try {
-        const deletedProduct = await Product.findByIdAndDelete(id);
-        if (deletedProduct)
-            return sendResponse(res, 204, true, 'Product deleted successfully');
-
-        return sendResponse(
-            res,
-            404,
-            false,
-            `Product with id ${id} not found to delete`
-        );
-    } catch (error) {
-        if (error instanceof mongoose.Error)
-            return sendResponse(
-                res,
-                400,
-                false,
-                'Product input data is invalid',
-                null,
-                getModelErrors(error)
-            );
-    }
-});
+server.delete('/products/:id', deleteProduct);
 
 server.listen(PORT, async () => {
     console.log('Server uriking on 6969!');
