@@ -21,7 +21,7 @@
 }
 ```
 
-## Request 2: GET http://localhost:6969/products/ Removed MongoDB Connection
+## `Request 2:` GET http://localhost:6969/products/ - Removed MongoDB Connection
 ## Response 2:
 ```html
 <!DOCTYPE html>

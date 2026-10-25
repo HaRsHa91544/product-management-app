@@ -32,6 +32,7 @@
 }
 ```
 
+
 ## Request 2: POST http://localhost:6969/products/
 ### Request Body:
 ```json
@@ -59,6 +60,7 @@
 }
 ```
 
+
 ## Request 3: POST http://localhost:6969/products/
 ### Request body: empty
 ## Response 3:
@@ -73,7 +75,7 @@
 }
 ```
 
-## Request 3:
+## `Request 3:` POST http://localhost:6969/products/ - Error messages has to be changed
 ```json
 {}
 ```
@@ -92,3 +94,27 @@
   }
 }
 ```
+
+## `Request 4:` POST http://localhost:6969/products/ - Handle the DuplicateKey Error
+### Request body: Already existed product 
+```json
+{
+  "_id": "6adcd60db6f030ec16a1f659",
+  "name": "Mouse",
+  "price": 1,
+  "category": "Electronics",
+  "description": "mouse",
+  "stockQuantity": 1
+}
+```
+### Response 4: No response because the Duplicate key error is not handled
+
+## `Request 5:` POST http://localhost:6969/products/ - Handle the invalid JSON
+### Request body: Invalid JSON
+```json
+{
+  "name": "Mouse",
+  "price": 1,
+}
+```
+## Respone 5: No response because the SyntaxError is not handled
