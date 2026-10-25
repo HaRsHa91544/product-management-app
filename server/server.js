@@ -48,10 +48,10 @@ server.listen(PORT, async () => {
     console.log('Server uriking on 6969!');
     try {
         await mongoose.connect(MONGODB_URI);
-        console.log('Connected to MongoDB Cluster!');
+        console.log('Connected to MongoDB Cluster!\n\n');
     }
     catch (e) {
-        console.log('Failed to connect to MongoDB Cluster!');
+        console.log('==== Failed to connect to MongoDB Cluster! ====\n\n');
         console.log(e);
     }
 });

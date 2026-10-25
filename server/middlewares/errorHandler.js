@@ -16,7 +16,7 @@ const errorHandler = (error, req, res, next) => {
         );
     }
 
-    if (error instanceof mongoose.Error) {
+    if (error instanceof mongoose.Error.ValidationError) {
         return sendResponse(
             res,
             400,
@@ -24,6 +24,36 @@ const errorHandler = (error, req, res, next) => {
             'Product input data is invalid',
             null,
             getModelErrors(error)
+        );
+    }
+
+    if (error instanceof mongoose.Error) {
+        return sendResponse(
+            res,
+            503,
+            false,
+            'Web server is temporarily unavailable to serve your request',
+            null
+        );
+    }
+
+    if (error.code === 11000) {
+        return sendResponse(
+            res,
+            409,
+            false,
+            'Given entity already exists',
+            null
+        );
+    }
+
+    if (error.statusCode === 400) {
+        return sendResponse(
+            res,
+            400,
+            false,
+            'The request is invalid',
+            null
         );
     }
 };
