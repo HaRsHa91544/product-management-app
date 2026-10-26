@@ -22,13 +22,21 @@ const updateProduct = async (req, res, next) => {
             returnDocument: 'after'
         }
     );
+    
+    if (updatedProduct)
+        return sendResponse(
+            res,
+            200,
+            true,
+            'Product updated successfully',
+            updatedProduct
+        );
 
     return sendResponse(
         res,
-        200,
-        true,
-        'Product updated successfully',
-        updatedProduct
+        404,
+        false,
+        `Product with id:${id} not found to delete`
     );
 };
 

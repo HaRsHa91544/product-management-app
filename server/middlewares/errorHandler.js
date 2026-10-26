@@ -16,6 +16,15 @@ const errorHandler = (error, req, res, next) => {
         );
     }
 
+    if (error.kind === 'ObjectId') {
+        return sendResponse(
+            res,
+            400,
+            false,
+            `Given ID:${error.value} is invalid`
+        );
+    }
+
     if (error instanceof mongoose.Error.ValidationError) {
         return sendResponse(
             res,

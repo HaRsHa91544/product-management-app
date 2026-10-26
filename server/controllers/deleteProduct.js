@@ -19,7 +19,7 @@ const deleteProduct = async (req, res, next) => {
         res,
         404,
         false,
-        `Product with id ${id} not found to delete`
+        `Product with id:${id} not found to delete`
     );
 };
 
