@@ -43,5 +43,8 @@ const productSchema = new mongoose.Schema({
     }
 });
 
+// Arrange the categories based on ascending order
+productSchema.index({ category: 1 });
+
 const Product = mongoose.model('Product', productSchema);
 export default Product;
