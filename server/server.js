@@ -12,15 +12,19 @@ import deleteProduct from './controllers/deleteProduct.js';
 
 import addProductValidator from './validators/addProductValidator.js';
 import updateProductValidator from './validators/updateProductValidator.js';
+import cors from './middlewares/cors.js';
 
 dotenv.config();
 
 const { PORT, MONGODB_URI } = process.env;
 
-const server = express();
+export const server = express();
 
 // JSON middleware
 server.use(express.json());
+
+// My own CORS middleware
+server.use(cors);
 
 server.get('/products', getProducts);
 
