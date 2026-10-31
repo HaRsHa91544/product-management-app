@@ -41,6 +41,14 @@ const productSchema = new mongoose.Schema({
         required: true,
         default: true
     }
+}, {
+    toJSON: {
+        virtuals: true,
+        transform: (doc, ret) => {
+            delete ret._id;
+            delete ret.__v;
+        }
+    }
 });
 
 // Arrange the categories based on ascending order
