@@ -2,11 +2,17 @@ import { memo } from "react";
 import ProductCard from "./ProductCard.jsx";
 import '../styles/products-list.css';
 
-function ProductsList({ products, validationError, setSelectedProductId }) {
+function ProductsList({ products, stateOfProducts, validationError, setSelectedProductId }) {
     return <section className="products-list-section">
         <h2 className="products-list-heading">Products List</h2>
         {
-            validationError && <h3 className="products-list-validation">
+            stateOfProducts !== 'success' && <h3 className="products-list-validation">
+                {stateOfProducts}
+            </h3>
+        }
+
+        {
+            validationError && stateOfProducts === 'success' && <h3 className="products-list-validation">
                 {validationError}
             </h3>
         }

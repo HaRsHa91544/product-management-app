@@ -9,7 +9,7 @@ import FilterByCategory from "./FilterByCategory.jsx";
 import '../styles/products-view.css';
 
 function ProductsView() {
-    const { products } = useProducts();
+    const { products, stateOfProducts } = useProducts();
 
     // States which are living here for the persistence 
     const [selectedProductId, setSelectedProductId] = useState(null);
@@ -56,6 +56,7 @@ function ProductsView() {
         </section>
 
         <ProductsList
+            stateOfProducts={stateOfProducts}
             products={filteredProducts}
             setSelectedProductId={setSelectedProductId}
             validationError={validationError}>
