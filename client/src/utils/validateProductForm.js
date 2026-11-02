@@ -1,20 +1,11 @@
-export default function validateProductForm(productForm, products) {
+export default function validateProductForm(productForm) {
     const validationErrors = {
-        id: '',
         name: '',
         price: '',
         category: '',
         description: '',
         stockQuantity: ''
     };
-
-    if (!(Number(productForm.id))) {
-        validationErrors.id = 'Product ID is required';
-    }
-
-    if (!productForm.isExists && products.find(p => p.id === Number(productForm.id))) {
-        validationErrors.id = 'Product with given ID already exists';
-    }
 
     if (productForm.name.length < 3) {
         validationErrors.name = 'Product name is invalid';

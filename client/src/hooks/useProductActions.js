@@ -1,25 +1,33 @@
 import { useProducts } from "../context/ProductsContext.jsx";
 import { useProductForm } from "../context/ProductFormContext.jsx";
 import { useProductFormOpen } from "../context/ProductFormOpenContext.jsx";
+import addProductService from "../services/addProductService.js";
 
 function useProductActions() {
     const { products, setProducts } = useProducts();
-    const { setProductForm } = useProductForm();
+    const { setProductForm, setProductSubmitError } = useProductForm();
     const { setFormOpened } = useProductFormOpen();
-    
-    function saveProduct(product) {
+
+    async function saveProduct(product) {
         // Updates the existing product
         if (product.isExists) {
             setProducts(products.map(p => {
                 return (p.id != product.id) ? p : product;
             }));
+            setFormOpened(false);
         }
         // Adds the new product
         else {
             product.isExists = true;
-            setProducts([...products, product]);
+            try {
+                const newProduct = await addProductService(product);
+                setProducts([...products, newProduct]);
+                setFormOpened(false);
+            }
+            catch (e) {
+                setProductSubmitError(e.message);
+            }
         }
-        setFormOpened(false);
     }
 
     function deleteProduct(id) {

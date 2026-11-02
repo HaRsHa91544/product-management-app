@@ -4,7 +4,6 @@ const ProductFormContext = createContext({});
 
 export function ProductFormProvider({ children }) {
     const [productForm, setProductForm] = useState({
-        id: 0,
         name: '',
         price: 0,
         category: '',
@@ -13,9 +12,16 @@ export function ProductFormProvider({ children }) {
         isExists: false
     });
 
+    const [productSubmitError, setProductSubmitError] = useState('');
+
     const productFormContextValue = useMemo(() => {
-        return { productForm, setProductForm };
-    }, [productForm]);
+        return {
+            productForm,
+            setProductForm,
+            productSubmitError,
+            setProductSubmitError
+        };
+    }, [productForm, productSubmitError]);
 
     return <ProductFormContext value={productFormContextValue}>
         {children}

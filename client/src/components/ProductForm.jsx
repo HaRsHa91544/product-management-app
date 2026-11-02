@@ -1,5 +1,4 @@
 import { memo } from "react";
-import { useProducts } from "../context/ProductsContext.jsx";
 import { useProductForm } from "../context/ProductFormContext.jsx";
 import InputField from "./ui/InputField.jsx";
 import useProductActions from "../hooks/useProductActions.js";
@@ -8,22 +7,21 @@ import '../styles/product-form.css';
 import { useProductFormOpen } from "../context/ProductFormOpenContext.jsx";
 
 function ProductForm() {
-    const { products } = useProducts();
-    const { productForm, setProductForm } = useProductForm();
+    const {
+        productForm,
+        setProductForm,
+        productSubmitError,
+        setProductSubmitError
+    } = useProductForm();
+    
     const { formOpened, setFormOpened } = useProductFormOpen();
-
-    // When form is not opened then don't render anything
-    if (!formOpened) {
-        return;
-    }
 
     const { saveProduct } = useProductActions();
 
-    const validationErrors = validateProductForm(productForm, products);
+    const validationErrors = validateProductForm(productForm);
 
     function clearProductForm() {
         setProductForm({
-            id: 0,
             name: '',
             price: 0,
             category: '',
@@ -40,6 +38,7 @@ function ProductForm() {
             elementClassList.contains('action-negative-btn')) {
             setFormOpened(false);
             clearProductForm();
+            setProductSubmitError('');
         }
     }
 
@@ -61,6 +60,11 @@ function ProductForm() {
         clearProductForm();
     }
 
+    // When form is not opened then don't render anything
+    if (!formOpened) {
+        return <></>;
+    }
+
     return <div className='form-overlay' onClick={closeProductForm}>
         <div className="form-container">
             <form className="product-form" onSubmit={productSubmitHandler}>
@@ -72,17 +76,6 @@ function ProductForm() {
                     className="action-negative-btn">
                     Close
                 </button>
-
-                <InputField
-                    label={'Product ID'}
-                    type={'number'}
-                    name={'id'}
-                    id={'id'}
-                    value={productForm.id}
-                    changeHandler={inputChangeHandler}
-                    readOnly={productForm.isExists}
-                    errors={validationErrors.id}
-                ></InputField>
 
                 <InputField
                     label={'Product Name'}
@@ -133,6 +126,8 @@ function ProductForm() {
                     changeHandler={inputChangeHandler}
                     errors={validationErrors.stockQuantity}
                 ></InputField>
+
+                {productSubmitError && <span className="input-error">{productSubmitError}</span>}
 
                 <button
                     className="action-neutral-btn"
