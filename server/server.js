@@ -18,7 +18,7 @@ dotenv.config();
 
 const { PORT, MONGODB_URI } = process.env;
 
-export const server = express();
+const server = express();
 
 // JSON middleware
 server.use(express.json());
