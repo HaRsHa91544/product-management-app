@@ -2,6 +2,7 @@ import { useProducts } from "../context/ProductsContext.jsx";
 import { useProductForm } from "../context/ProductFormContext.jsx";
 import { useProductFormOpen } from "../context/ProductFormOpenContext.jsx";
 import addProductService from "../services/addProductService.js";
+import updateProductService from "../services/updateProductService.js";
 
 function useProductActions() {
     const { products, setProducts } = useProducts();
@@ -11,10 +12,16 @@ function useProductActions() {
     async function saveProduct(product) {
         // Updates the existing product
         if (product.isExists) {
-            setProducts(products.map(p => {
-                return (p.id != product.id) ? p : product;
-            }));
-            setFormOpened(false);
+            try {
+                const updatedProduct = await updateProductService(product);
+                setProducts(products.map(p => {
+                    return (p.id != updatedProduct.id) ? p : updatedProduct;
+                }));
+                setFormOpened(false);
+            }
+            catch (e) {
+                setProductSubmitError(e.message);
+            }
         }
         // Adds the new product
         else {

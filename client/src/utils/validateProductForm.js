@@ -11,7 +11,7 @@ export default function validateProductForm(productForm) {
         validationErrors.name = 'Product name is invalid';
     }
 
-    if (!(Number(productForm.price))) {
+    if (!(Number(productForm.price)) || (Number(productForm.price)) <= 0) {
         validationErrors.price = 'Product price should be greater than ₹0';
     }
 
@@ -23,7 +23,7 @@ export default function validateProductForm(productForm) {
         validationErrors.description = 'Product description is invalid';
     }
 
-    if (!(Number(productForm.stockQuantity))) {
+    if (!(Number(productForm.stockQuantity)) || (Number(productForm.stockQuantity)) <= 0) {
         validationErrors.stockQuantity = 'Product stock should be greater than 0';
     }
 
