@@ -7,6 +7,8 @@ function ProductActions({ product, setSelectedProductId = null }) {
 
     const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false);
 
+    const [deleteError, setDeleteError] = useState('');
+
     const { id } = product;
 
 
@@ -16,15 +18,18 @@ function ProductActions({ product, setSelectedProductId = null }) {
             <div className="product-actions">
                 <button
                     className="action-negative-btn"
-                    onClick={() => deleteProduct(id)}>
+                    onClick={() => deleteProduct(id, setDeleteError)}>
                     Yes
                 </button>
                 <button
                     className="action-positive-btn"
-                    onClick={() => setIsDeleteBtnClicked(false)}>
-                    No
+                    onClick={() => {
+                        setIsDeleteBtnClicked(false);
+                        setDeleteError('');
+                    }}>No
                 </button>
             </div>
+            {deleteError && <span className="input-error">{deleteError}</span>}
         </div>;
 
 

@@ -3,6 +3,7 @@ import { useProductForm } from "../context/ProductFormContext.jsx";
 import { useProductFormOpen } from "../context/ProductFormOpenContext.jsx";
 import addProductService from "../services/addProductService.js";
 import updateProductService from "../services/updateProductService.js";
+import deleteProductService from "../services/deleteProductService.js";
 
 function useProductActions() {
     const { products, setProducts } = useProducts();
@@ -37,8 +38,14 @@ function useProductActions() {
         }
     }
 
-    function deleteProduct(id) {
-        setProducts(prev => prev.filter(p => p.id != id));
+    async function deleteProduct(id, setDeleteError) {
+        try {
+            await deleteProductService(id);
+            setProducts(prev => prev.filter(p => p.id != id));
+        }
+        catch (e) {
+            setDeleteError(e.message);
+        }
     }
 
     function editProduct(product) {
