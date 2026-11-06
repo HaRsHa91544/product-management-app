@@ -13,7 +13,7 @@ function ProductForm() {
         productSubmitError,
         setProductSubmitError
     } = useProductForm();
-    
+
     const { formOpened, setFormOpened } = useProductFormOpen();
 
     const { saveProduct } = useProductActions();
@@ -56,8 +56,7 @@ function ProductForm() {
 
     function productSubmitHandler(e) {
         e.preventDefault();
-        saveProduct(productForm);
-        clearProductForm();
+        saveProduct(productForm).then(clearProductForm);
     }
 
     // When form is not opened then don't render anything

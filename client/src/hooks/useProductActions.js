@@ -22,6 +22,7 @@ function useProductActions() {
             }
             catch (e) {
                 setProductSubmitError(e.message);
+                return Promise.reject('Something went wrong');
             }
         }
         // Adds the new product
@@ -34,6 +35,7 @@ function useProductActions() {
             }
             catch (e) {
                 setProductSubmitError(e.message);
+                return Promise.reject('Something went wrong');
             }
         }
     }
