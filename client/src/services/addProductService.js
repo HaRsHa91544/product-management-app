@@ -1,7 +1,7 @@
 const addProductService = async (product) => {
     const API_URL = import.meta.env.VITE_API_URL;
 
-    const req = await fetch(API_URL, {
+    const req = await fetch(API_URL + 'products/', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'

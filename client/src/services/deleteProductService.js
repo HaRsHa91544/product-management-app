@@ -1,7 +1,7 @@
 const deleteProductService = async (id) => {
     const API_URL = import.meta.env.VITE_API_URL;
 
-    const req = await fetch(API_URL + id, {
+    const req = await fetch(API_URL + 'products/' + id, {
         method: 'DELETE'
     });
 

@@ -2,7 +2,7 @@ const updateProductService = async (product) => {
     const API_URL = import.meta.env.VITE_API_URL;
     const { id } = product;
 
-    const req = await fetch(API_URL + id, {
+    const req = await fetch(API_URL + 'products/' + id, {
         method: 'PUT',
         headers: {
             'Content-type': 'application/json'
