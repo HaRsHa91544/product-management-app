@@ -1,7 +1,7 @@
 const allowedOrigins = [
     'http://localhost:5173',
     'http://127.0.0.1:5500',
-    'https://harsha91544.github.io/'
+    'https://harsha91544.github.io'
 ];
 
 const cors = (req, res, next) => {
