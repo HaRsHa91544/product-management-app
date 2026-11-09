@@ -32,10 +32,13 @@ function ProductForm() {
     }
 
     function closeProductForm(e) {
-        const elementClassList = e.target.classList;
+        const elementClassList = e?.target?.classList;
 
-        if (elementClassList.contains('form-overlay') ||
-            elementClassList.contains('action-negative-btn')) {
+        if (
+            e === 'action' ||
+            elementClassList.contains('form-overlay') ||
+            elementClassList.contains('action-negative-btn')
+        ) {
             setFormOpened(false);
             clearProductForm();
             setProductSubmitError('');
@@ -56,7 +59,7 @@ function ProductForm() {
 
     function productSubmitHandler(e) {
         e.preventDefault();
-        saveProduct(productForm).then(clearProductForm);
+        saveProduct(productForm).then(() => closeProductForm('action'));
     }
 
     // When form is not opened then don't render anything

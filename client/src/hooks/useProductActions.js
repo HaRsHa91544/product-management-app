@@ -18,7 +18,6 @@ function useProductActions() {
                 setProducts(products.map(p => {
                     return (p.id != updatedProduct.id) ? p : updatedProduct;
                 }));
-                setFormOpened(false);
             }
             catch (e) {
                 setProductSubmitError(e.message);
@@ -31,7 +30,6 @@ function useProductActions() {
             try {
                 const newProduct = await addProductService(product);
                 setProducts([...products, newProduct]);
-                setFormOpened(false);
             }
             catch (e) {
                 setProductSubmitError(e.message);

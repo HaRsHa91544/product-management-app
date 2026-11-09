@@ -1,6 +1,6 @@
 import { ProductsProvider } from "../context/ProductsContext.jsx";
 import { ProductFormProvider } from "../context/ProductFormContext.jsx";
-import { ProductFormOpenProvider, useProductFormOpen } from "../context/ProductFormOpenContext.jsx";
+import { ProductFormOpenProvider } from "../context/ProductFormOpenContext.jsx";
 
 import Header from "../components/Header.jsx";
 import ProductForm from "../components/ProductForm.jsx";
