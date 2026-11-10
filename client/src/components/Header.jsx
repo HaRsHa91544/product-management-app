@@ -1,8 +1,8 @@
-import { useProductFormOpen } from '../context/ProductFormOpenContext.jsx';
+import { useProductForm } from '../context/ProductFormContext.jsx';
 import '../styles/header.css';
 
 function Header() {
-    const { setFormOpened } = useProductFormOpen();
+    const { setFormOpened } = useProductForm();
     return <header>
         <h1 className='header-title'>Product Management App</h1>
         <button

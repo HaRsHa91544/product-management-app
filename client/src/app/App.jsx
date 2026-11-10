@@ -1,6 +1,5 @@
 import { ProductsProvider } from "../context/ProductsContext.jsx";
 import { ProductFormProvider } from "../context/ProductFormContext.jsx";
-import { ProductFormOpenProvider } from "../context/ProductFormOpenContext.jsx";
 
 import Header from "../components/Header.jsx";
 import ProductForm from "../components/ProductForm.jsx";
@@ -10,11 +9,9 @@ function App() {
     return (
         <ProductsProvider>
             <ProductFormProvider>
-                <ProductFormOpenProvider>
-                    <Header></Header>
-                    <ProductForm></ProductForm>
-                    <ProductsView></ProductsView>
-                </ProductFormOpenProvider>
+                <Header></Header>
+                <ProductForm></ProductForm>
+                <ProductsView></ProductsView>
             </ProductFormProvider>
         </ProductsProvider>
     );

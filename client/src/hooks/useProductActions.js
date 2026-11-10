@@ -1,14 +1,18 @@
 import { useProducts } from "../context/ProductsContext.jsx";
 import { useProductForm } from "../context/ProductFormContext.jsx";
-import { useProductFormOpen } from "../context/ProductFormOpenContext.jsx";
+
 import addProductService from "../services/addProductService.js";
 import updateProductService from "../services/updateProductService.js";
 import deleteProductService from "../services/deleteProductService.js";
 
 function useProductActions() {
     const { products, setProducts } = useProducts();
-    const { setProductForm, setProductSubmitError } = useProductForm();
-    const { setFormOpened } = useProductFormOpen();
+    
+    const {
+        setProductForm,
+        setFormOpened,
+        setProductSubmitError
+    } = useProductForm();
 
     async function saveProduct(product) {
         // Updates the existing product

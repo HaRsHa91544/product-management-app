@@ -14,14 +14,18 @@ export function ProductFormProvider({ children }) {
 
     const [productSubmitError, setProductSubmitError] = useState('');
 
+    const [formOpened, setFormOpened] = useState(false);
+
     const productFormContextValue = useMemo(() => {
         return {
             productForm,
             setProductForm,
+            formOpened,
+            setFormOpened,
             productSubmitError,
             setProductSubmitError
         };
-    }, [productForm, productSubmitError]);
+    }, [productForm, formOpened, productSubmitError]);
 
     return <ProductFormContext value={productFormContextValue}>
         {children}

@@ -4,17 +4,16 @@ import InputField from "./ui/InputField.jsx";
 import useProductActions from "../hooks/useProductActions.js";
 import validateProductForm from "../utils/validateProductForm.js";
 import '../styles/product-form.css';
-import { useProductFormOpen } from "../context/ProductFormOpenContext.jsx";
 
 function ProductForm() {
     const {
         productForm,
         setProductForm,
+        formOpened,
+        setFormOpened,
         productSubmitError,
         setProductSubmitError
     } = useProductForm();
-
-    const { formOpened, setFormOpened } = useProductFormOpen();
 
     const { saveProduct } = useProductActions();
 
