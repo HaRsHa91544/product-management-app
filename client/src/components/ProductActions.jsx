@@ -1,6 +1,7 @@
 import { useState } from "react";
 import useProductActions from "../hooks/useProductActions.js";
 import '../styles/product-actions.css';
+import disableButton from "../utils/disableButton.js";
 
 function ProductActions({ product, setSelectedProductId = null }) {
     const { editProduct, deleteProduct } = useProductActions();
@@ -11,6 +12,10 @@ function ProductActions({ product, setSelectedProductId = null }) {
 
     const { id } = product;
 
+    const productDeleteHandler = (e) => {
+        disableButton(e.target);
+        deleteProduct(id, setDeleteError);
+    };
 
     if (isDeleteBtnClicked)
         return <div className="delete-confirmation-section">
@@ -18,7 +23,7 @@ function ProductActions({ product, setSelectedProductId = null }) {
             <div className="product-actions">
                 <button
                     className="action-negative-btn"
-                    onClick={() => deleteProduct(id, setDeleteError)}>
+                    onClick={productDeleteHandler}>
                     Yes
                 </button>
                 <button

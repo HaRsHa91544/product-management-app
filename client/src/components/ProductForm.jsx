@@ -4,6 +4,7 @@ import InputField from "./ui/InputField.jsx";
 import useProductActions from "../hooks/useProductActions.js";
 import validateProductForm from "../utils/validateProductForm.js";
 import '../styles/product-form.css';
+import disableButton from "../utils/disableButton.js";
 
 function ProductForm() {
     const {
@@ -58,6 +59,7 @@ function ProductForm() {
 
     function productSubmitHandler(e) {
         e.preventDefault();
+        disableButton(e.submitter);
         saveProduct(productForm).then(() => closeProductForm('action'));
     }
 
