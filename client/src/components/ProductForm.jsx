@@ -5,8 +5,11 @@ import useProductActions from "../hooks/useProductActions.js";
 import validateProductForm from "../utils/validateProductForm.js";
 import '../styles/product-form.css';
 import disableButton from "../utils/disableButton.js";
+import { useProducts } from "../context/ProductsContext.jsx";
 
 function ProductForm() {
+    const { products } = useProducts();
+
     const {
         productForm,
         setProductForm,
@@ -67,6 +70,25 @@ function ProductForm() {
     if (!formOpened) {
         return <></>;
     }
+
+    let isExistingProductChanged = false;
+
+    if (productForm.isExists) {
+        const existingProduct = products.find(p => p.id === productForm.id);
+
+        isExistingProductChanged = Object
+            .keys(existingProduct)
+            .some(k => existingProduct[k] !== productForm[k]);
+    }
+
+    const isSubmitAllowed = !validationErrors.id &&
+        !validationErrors.name &&
+        !validationErrors.price &&
+        !validationErrors.description &&
+        !validationErrors.category &&
+        !validationErrors.stockQuantity &&
+        (productForm.isExists) ? isExistingProductChanged : true;
+
 
     return <div className='form-overlay' onClick={closeProductForm}>
         <div className="form-container">
@@ -130,7 +152,11 @@ function ProductForm() {
                     errors={validationErrors.stockQuantity}
                 ></InputField>
 
-                {productSubmitError && <span className="input-error">{productSubmitError}</span>}
+                {
+                    productSubmitError && <span className="input-error">
+                        {productSubmitError}
+                    </span>
+                }
 
                 <button
                     className="action-neutral-btn"
@@ -142,14 +168,7 @@ function ProductForm() {
                 <button
                     className="action-positive-btn"
                     type="submit"
-                    disabled={
-                        validationErrors.id ||
-                        validationErrors.name ||
-                        validationErrors.price ||
-                        validationErrors.description ||
-                        validationErrors.category ||
-                        validationErrors.stockQuantity
-                    }>
+                    disabled={!isSubmitAllowed}>
                     {(productForm.isExists) ? 'Update Product' : 'Add Product'}
                 </button>
             </form>
