@@ -12,8 +12,6 @@ export function ProductFormProvider({ children }) {
         isExists: false
     });
 
-    const [productSubmitError, setProductSubmitError] = useState('');
-
     const [formOpened, setFormOpened] = useState(false);
 
     const productFormContextValue = useMemo(() => {
@@ -21,11 +19,9 @@ export function ProductFormProvider({ children }) {
             productForm,
             setProductForm,
             formOpened,
-            setFormOpened,
-            productSubmitError,
-            setProductSubmitError
+            setFormOpened
         };
-    }, [productForm, formOpened, productSubmitError]);
+    }, [productForm, formOpened]);
 
     return <ProductFormContext value={productFormContextValue}>
         {children}

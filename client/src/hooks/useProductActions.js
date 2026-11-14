@@ -7,11 +7,10 @@ import deleteProductService from "../services/deleteProductService.js";
 
 function useProductActions() {
     const { products, setProducts } = useProducts();
-    
+
     const {
         setProductForm,
-        setFormOpened,
-        setProductSubmitError
+        setFormOpened
     } = useProductForm();
 
     async function saveProduct(product) {
@@ -24,20 +23,17 @@ function useProductActions() {
                 }));
             }
             catch (e) {
-                setProductSubmitError(e.message);
-                return Promise.reject('Something went wrong');
+                return Promise.reject(e.cause);
             }
         }
         // Adds the new product
         else {
-            product.isExists = true;
             try {
                 const newProduct = await addProductService(product);
                 setProducts([...products, newProduct]);
             }
             catch (e) {
-                setProductSubmitError(e.message);
-                return Promise.reject('Something went wrong');
+                return Promise.reject(e.cause);
             }
         }
     }

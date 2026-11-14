@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { useProductForm } from "../context/ProductFormContext.jsx";
 import InputField from "./ui/InputField.jsx";
 import useProductActions from "../hooks/useProductActions.js";
@@ -14,12 +14,12 @@ function ProductForm() {
         productForm,
         setProductForm,
         formOpened,
-        setFormOpened,
-        productSubmitError,
-        setProductSubmitError
+        setFormOpened
     } = useProductForm();
 
     const { saveProduct } = useProductActions();
+
+    const [serverValidationErrors, setServerValidationErrors] = useState({});
 
     const validationErrors = validateProductForm(productForm);
 
@@ -43,8 +43,8 @@ function ProductForm() {
             elementClassList.contains('action-negative-btn')
         ) {
             setFormOpened(false);
+            setServerValidationErrors({});
             clearProductForm();
-            setProductSubmitError('');
         }
     }
 
@@ -63,7 +63,13 @@ function ProductForm() {
     function productSubmitHandler(e) {
         e.preventDefault();
         disableButton(e.submitter);
-        saveProduct(productForm).then(() => closeProductForm('action'));
+        saveProduct(productForm)
+            .then(() => {
+                closeProductForm('action')
+            })
+            .catch((errors) => {
+                setServerValidationErrors(errors);
+            });
     }
 
     // When form is not opened then don't render anything
@@ -75,10 +81,10 @@ function ProductForm() {
 
     if (productForm.isExists) {
         const existingProduct = products.find(p => p.id === productForm.id);
-
-        isExistingProductChanged = Object
-            .keys(existingProduct)
-            .some(k => existingProduct[k] !== productForm[k]);
+        if (existingProduct)
+            isExistingProductChanged = Object
+                .keys(existingProduct)
+                .some(k => existingProduct[k] !== productForm[k]);
     }
 
     const isSubmitAllowed = !validationErrors.name &&
@@ -108,7 +114,7 @@ function ProductForm() {
                     id={'name'}
                     value={productForm.name}
                     changeHandler={inputChangeHandler}
-                    errors={validationErrors.name}
+                    errors={validationErrors.name || serverValidationErrors.name}
                 ></InputField>
 
                 <InputField
@@ -118,7 +124,7 @@ function ProductForm() {
                     id={'price'}
                     value={productForm.price}
                     changeHandler={inputChangeHandler}
-                    errors={validationErrors.price}
+                    errors={validationErrors.price || serverValidationErrors.price}
                 ></InputField>
 
                 <InputField
@@ -128,7 +134,7 @@ function ProductForm() {
                     id={'category'}
                     value={productForm.category}
                     changeHandler={inputChangeHandler}
-                    errors={validationErrors.category}
+                    errors={validationErrors.category || serverValidationErrors.category}
                 ></InputField>
 
                 <InputField
@@ -138,7 +144,7 @@ function ProductForm() {
                     id={'description'}
                     value={productForm.description}
                     changeHandler={inputChangeHandler}
-                    errors={validationErrors.description}
+                    errors={validationErrors.description || serverValidationErrors.description}
                 ></InputField>
 
                 <InputField
@@ -148,14 +154,8 @@ function ProductForm() {
                     id={'stockQuantity'}
                     value={productForm.stockQuantity}
                     changeHandler={inputChangeHandler}
-                    errors={validationErrors.stockQuantity}
+                    errors={validationErrors.stockQuantity || serverValidationErrors.stockQuantity}
                 ></InputField>
-
-                {
-                    productSubmitError && <span className="input-error">
-                        {productSubmitError}
-                    </span>
-                }
 
                 <button
                     className="action-neutral-btn"
