@@ -81,13 +81,12 @@ function ProductForm() {
             .some(k => existingProduct[k] !== productForm[k]);
     }
 
-    const isSubmitAllowed = !validationErrors.id &&
-        !validationErrors.name &&
+    const isSubmitAllowed = !validationErrors.name &&
         !validationErrors.price &&
         !validationErrors.description &&
         !validationErrors.category &&
         !validationErrors.stockQuantity &&
-        (productForm.isExists) ? isExistingProductChanged : true;
+        (productForm.isExists ? isExistingProductChanged : true);
 
 
     return <div className='form-overlay' onClick={closeProductForm}>
