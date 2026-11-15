@@ -38,9 +38,9 @@ function ProductForm() {
         const elementClassList = e?.target?.classList;
 
         if (
-            e === 'action' ||
             elementClassList.contains('form-overlay') ||
-            elementClassList.contains('action-negative-btn')
+            elementClassList.contains('form-submit-btn') ||
+            elementClassList.contains('form-close-btn')
         ) {
             setFormOpened(false);
             setServerValidationErrors({});
@@ -65,7 +65,7 @@ function ProductForm() {
         disableButton(e.submitter);
         saveProduct(productForm)
             .then(() => {
-                closeProductForm('action')
+                closeProductForm(e.submitter)
             })
             .catch((errors) => {
                 setServerValidationErrors(errors);
@@ -103,7 +103,7 @@ function ProductForm() {
                 <button
                     type="button"
                     onClick={closeProductForm}
-                    className="action-negative-btn">
+                    className="action-negative-btn form-close-btn">
                     Close
                 </button>
 
@@ -165,7 +165,7 @@ function ProductForm() {
                 </button>
 
                 <button
-                    className="action-positive-btn"
+                    className="action-positive-btn form-submit-btn"
                     type="submit"
                     disabled={!isSubmitAllowed}>
                     {(productForm.isExists) ? 'Update Product' : 'Add Product'}

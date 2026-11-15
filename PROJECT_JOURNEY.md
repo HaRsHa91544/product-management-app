@@ -17,7 +17,8 @@ It is a small product management app. A user can:
 - View one product in a details page
 - Search products by name
 - Filter products by category
-- Get validation messages when input is wrong
+- Get validation messages when input is wrong, including errors that come from the server
+- Edit a product without accidentally sending an update when nothing changed
 
 The frontend is React + Vite. The backend is Express + MongoDB (through Mongoose).
 
@@ -95,6 +96,20 @@ next step was a real backend.
 - Merged the separate form-open context into the main form context (Issue #13).
 - Prevented duplicate requests caused by double-clicking buttons (Issue #16).
 
+### Phase 6: Better validation and safe updates (Nov 14)
+
+Two more issues were fixed, and the validation design became clearer.
+
+- Added client-side error message constants in `client/src/errors/product/`, so the
+  frontend uses the same wording as the backend.
+- Stopped showing only one general submit error. Server errors are now stored in local form
+  state and displayed under the matching input fields (Issue #15).
+- Stopped the form from sending an update when no field has changed. The Update button stays
+  disabled until the user actually edits something (Issue #17).
+- Fixed an operator-precedence bug in the "is update allowed" ternary expression (a
+  follow-up to Issue #17).
+- Simplified `ProductFormContext` by removing the old single `productSubmitError` state.
+
 ---
 
 ## 3. Simple architecture
@@ -109,10 +124,10 @@ App
   |
   +-- ProductsProvider        (products + loading state, talks to the API)
   |
-  +-- ProductFormProvider     (form fields + form open/closed + submit error)
+  +-- ProductFormProvider     (form fields + form open/closed)
         |
         +-- Header            (+ Product button opens the form)
-        +-- ProductForm       (add/edit form)
+        +-- ProductForm       (add/edit form + local server validation errors)
         +-- ProductsView      (search + filter + list/details)
               |
               +-- SearchBar
@@ -129,6 +144,8 @@ Important idea: **state is kept as close as possible to the components that need
 
 - Shared list data lives in `ProductsContext` because many components need it.
 - Shared form data lives in `ProductFormContext` because the header and the form need it.
+- The individual form's server validation errors live inside `ProductForm` itself, because
+  no other component needs them.
 - Search text, selected category, and selected product ID live in `ProductsView` because
   only that part of the screen uses them.
 - Filtered products are **calculated**, not stored. Storing them separately would create
@@ -146,7 +163,25 @@ Browser component
 ```
 
 It decides whether to add or update by checking `product.isExists`, updates the products
-state after success, and stores error messages when something fails.
+state after success, and passes the server's error details back to the form when something
+fails.
+
+### How validation errors reach the right input
+
+There are two validation layers, and they now work together:
+
+1. `validateProductForm` checks the fields in the browser. Its messages come from
+   `client/src/errors/product/`.
+2. The server validates again with Zod. If it rejects a request, the response contains an
+   `errors` object such as `{ "price": "Minimum product price must be ₹1" }`.
+3. The service files attach that `errors` object to the thrown error as its `cause`.
+4. `useProductActions` rejects with that `cause`.
+5. `ProductForm` saves it in local state called `serverValidationErrors`.
+6. Each `InputField` shows `clientError || serverError`, so the message appears directly
+   under the field that caused it.
+
+This is why the general `productSubmitError` state is no longer needed in
+`ProductFormContext`.
 
 ### Backend
 
@@ -208,15 +243,15 @@ isExists       boolean, defaults to true
 1. The user clicks **+ Product**. `setFormOpened(true)` makes the form appear.
 2. The user types. Each change updates `productForm` in `ProductFormContext`.
 3. `validateProductForm` runs on every render. The submit button stays disabled until all
-   fields are valid.
+   fields are valid. When editing, it also stays disabled until at least one field changes.
 4. On submit, the button is disabled to stop double clicks, then `saveProduct` runs.
 5. `saveProduct` calls `addProductService`, which sends a `POST /products` request.
 6. The server validates the body with Zod, creates the product with Mongoose, and saves it
    in MongoDB.
 7. The new product comes back in the response and is added to the products state.
-8. Only after success, the form is cleared and closed.
-9. If the request fails, the error message is shown and the form stays open so the user
-   does not lose their input.
+8. Only after success, the form is cleared, its server errors are reset, and it closes.
+9. If the request fails, the server's field errors are shown under the matching inputs and
+   the form stays open so the user does not lose their input.
 
 ---
 
@@ -239,8 +274,9 @@ of state belong to the same feature.
 **What happened:** Closing the form did not always clear the typed product data, so opening
 the form again could show old values.
 
-**Solution:** Created one `closeProductForm` function that both closes the form and clears
-the form data. Clicking the overlay and clicking Close now use the same function.
+**Solution:** Created one `closeProductForm` function that closes the form, clears the form
+data, and clears any server validation errors. Clicking the overlay and clicking Close now
+use the same function.
 
 **Lesson:** When two pieces of state must change together, change them in one place.
 
@@ -336,7 +372,8 @@ origin.
 immediately. It did not wait to see whether the request succeeded.
 
 **Solution:** The form now clears only after the promise resolves. On failure,
-`saveProduct` rejects, shows the error, and the form keeps the user's input.
+`saveProduct` rejects with the server's field errors, those errors are displayed under the
+inputs, and the form keeps the user's input.
 
 **Lesson:** Only do the "success" action after the request actually succeeds.
 
@@ -397,6 +434,43 @@ automatically a working deployed app.
 
 **Lesson:** Test the unhappy paths, not just the happy path. Errors are part of the API.
 
+### Problem 17: Server validation errors were not shown next to fields (Issue #15)
+
+**What happened:** The backend already returned field-level errors like
+`{ "price": "Minimum product price must be ₹1" }`, but the form only had one general error
+message. The user could not easily tell which field was wrong, and the client and server
+used different wording.
+
+**Solution:**
+- Added matching error message constants in `client/src/errors/product/`, so both sides say
+  the same thing.
+- Passed the server's `errors` object through the service layer as the error's `cause`, then
+  through `useProductActions` to `ProductForm`.
+- Stored those errors in local `serverValidationErrors` state and displayed
+  `clientError || serverError` under each input.
+- Removed the old general `productSubmitError` from the form context.
+
+**Lesson:** Server errors should be mapped back to the exact field that caused them. Keep UI
+error state as local as possible, and keep shared wording in constants instead of repeating
+strings.
+
+### Problem 18: Update requests were sent even when nothing changed (Issue #17)
+
+**What happened:** Opening a product in edit mode and pressing Update sent a request even if
+the user had not changed anything. After adding a "has anything changed?" check, a second
+bug appeared: the disabled condition mixed `&&` and `?:` without parentheses, so it was
+evaluated in the wrong order.
+
+**Solution:**
+- Compare the product in the form with the product in the list, field by field.
+- Keep the Update button disabled until at least one field is different.
+- Guard against a missing product before comparing.
+- Wrap the ternary in parentheses:
+  `(productForm.isExists ? isExistingProductChanged : true)`.
+
+**Lesson:** Avoid pointless network requests. When mixing `&&` and `?:`, use parentheses to
+make the intended order obvious, and test the exact edge case you are fixing.
+
 ---
 
 ## 6. The main lessons, in beginner language
@@ -417,6 +491,11 @@ automatically a working deployed app.
 9. **Always handle loading, success, and failure.** The UI should tell the user what is
    happening.
 10. **Keep API responses consistent.** A single response shape makes frontend code simple.
+11. **Show errors where they belong.** A server field error is more useful under that input
+    than as one general message at the bottom.
+12. **Avoid no-op requests.** If nothing changed, there is nothing to save.
+13. **Keep repeated messages in constants.** Matching client and server wording prevents
+    confusing, slightly different validation messages.
 
 ---
 
@@ -430,6 +509,7 @@ product-management-app/
 |   |   +-- app/                App entry layout
 |   |   +-- components/         UI components
 |   |   +-- context/            ProductsContext and ProductFormContext
+|   |   +-- errors/             Validation message constants used by the form
 |   |   +-- hooks/              useProductActions
 |   |   +-- services/           fetch calls to the API
 |   |   +-- utils/              validation, filtering, button helper
@@ -438,7 +518,6 @@ product-management-app/
 |   +-- vite.config.js          base path for GitHub Pages
 |   +-- .env                    VITE_API_URL
 |   +-- engineering-decision-notes/   Why certain refactors were done
-|   +-- LESSONS.md
 |
 +-- server/                     Express backend
 |   +-- server.js               app setup, routes, database connection
@@ -454,6 +533,7 @@ product-management-app/
 |
 +-- .github/workflows/deploy.yml   GitHub Pages deployment
 +-- README.md
++-- LESSONS.md                     Short list of the main React lessons learnt
 +-- PROJECT_JOURNEY.md             this file
 ```
 
@@ -511,6 +591,8 @@ This project started as a small React practice app and grew in clear stages:
 6. Connect the frontend to the API with loading and error states.
 7. Deploy the frontend and backend, then fix the real-world configuration issues.
 8. Polish edge cases such as failed saves and double-click requests.
+9. Improve validation feedback by showing server errors per field, and prevent updates when
+   nothing has changed.
 
 The biggest takeaway is not any single library. It is the habit of noticing duplication,
 unclear responsibilities, and repeated bugs, then moving code so that each piece has one
