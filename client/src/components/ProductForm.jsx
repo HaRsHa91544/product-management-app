@@ -35,12 +35,11 @@ function ProductForm() {
     }
 
     function closeProductForm(e) {
-        const elementClassList = e?.target?.classList;
-
+        const elementClassList = e.target.classList;
         if (
-            elementClassList.contains('form-overlay') ||
-            elementClassList.contains('form-submit-btn') ||
-            elementClassList.contains('form-close-btn')
+            (elementClassList.contains('form-overlay') && e.type === 'click') ||
+            (elementClassList.contains('product-form') && e.type === 'submit') ||
+            (elementClassList.contains('form-close-btn') && e.type === 'click')
         ) {
             setFormOpened(false);
             setServerValidationErrors({});
@@ -65,7 +64,7 @@ function ProductForm() {
         disableButton(e.submitter);
         saveProduct(productForm)
             .then(() => {
-                closeProductForm(e.submitter)
+                closeProductForm(e);
             })
             .catch((errors) => {
                 setServerValidationErrors(errors);
@@ -102,7 +101,6 @@ function ProductForm() {
 
                 <button
                     type="button"
-                    onClick={closeProductForm}
                     className="action-negative-btn form-close-btn">
                     Close
                 </button>
@@ -160,7 +158,7 @@ function ProductForm() {
                 <button
                     className="action-neutral-btn"
                     type="button"
-                    onClick={() => clearProductForm()}>
+                    onClick={clearProductForm}>
                     Reset
                 </button>
 
