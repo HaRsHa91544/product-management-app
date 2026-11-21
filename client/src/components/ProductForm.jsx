@@ -37,7 +37,7 @@ function ProductForm() {
     function closeProductForm(e) {
         const elementClassList = e.target.classList;
         if (
-            (elementClassList.contains('form-overlay') && e.type === 'click') ||
+            (elementClassList.contains('form-overlay') && e.type === 'click')  ||
             (elementClassList.contains('product-form') && e.type === 'submit') ||
             (elementClassList.contains('form-close-btn') && e.type === 'click')
         ) {

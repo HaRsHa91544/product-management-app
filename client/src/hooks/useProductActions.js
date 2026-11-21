@@ -29,6 +29,7 @@ function useProductActions() {
         // Adds the new product
         else {
             try {
+                product.isExists = true;
                 const newProduct = await addProductService(product);
                 setProducts([...products, newProduct]);
             }
