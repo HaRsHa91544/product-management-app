@@ -29,8 +29,7 @@ function ProductForm() {
             price: 0,
             category: '',
             description: '',
-            stockQuantity: 0,
-            isExists: false
+            stockQuantity: 0
         });
     }
 
@@ -78,8 +77,9 @@ function ProductForm() {
 
     let isExistingProductChanged = false;
 
-    if (productForm.isExists) {
+    if (productForm.id) {
         const existingProduct = products.find(p => p.id === productForm.id);
+        
         if (existingProduct)
             isExistingProductChanged = Object
                 .keys(existingProduct)
@@ -91,7 +91,7 @@ function ProductForm() {
         !validationErrors.description &&
         !validationErrors.category &&
         !validationErrors.stockQuantity &&
-        (productForm.isExists ? isExistingProductChanged : true);
+        (productForm.id ? isExistingProductChanged : true);
 
 
     return <div className='form-overlay' onClick={closeProductForm}>
@@ -166,7 +166,7 @@ function ProductForm() {
                     className="action-positive-btn form-submit-btn"
                     type="submit"
                     disabled={!isSubmitAllowed}>
-                    {(productForm.isExists) ? 'Update Product' : 'Add Product'}
+                    {(productForm.id) ? 'Update Product' : 'Add Product'}
                 </button>
             </form>
         </div>

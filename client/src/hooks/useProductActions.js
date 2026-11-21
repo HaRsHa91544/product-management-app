@@ -15,7 +15,7 @@ function useProductActions() {
 
     async function saveProduct(product) {
         // Updates the existing product
-        if (product.isExists) {
+        if (product.id) {
             try {
                 const updatedProduct = await updateProductService(product);
                 setProducts(products.map(p => {
@@ -29,7 +29,6 @@ function useProductActions() {
         // Adds the new product
         else {
             try {
-                product.isExists = true;
                 const newProduct = await addProductService(product);
                 setProducts([...products, newProduct]);
             }

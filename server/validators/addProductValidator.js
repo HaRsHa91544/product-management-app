@@ -23,10 +23,7 @@ const addProductValidator = z.object({
         .min(3, DESCRIPTION_ERRORS.MIN),
     stockQuantity: z
         .number({ error: STOCK_QUANTITY_ERRORS.VALID })
-        .min(1, STOCK_QUANTITY_ERRORS.MIN),
-    isExists: z
-        .boolean()
-        .default(true)
+        .min(1, STOCK_QUANTITY_ERRORS.MIN)
 }, { error: 'Product input data is invalid' });
 
 export default addProductValidator;

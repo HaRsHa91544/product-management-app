@@ -35,11 +35,6 @@ const productSchema = new mongoose.Schema({
         cast: STOCK_QUANTITY_ERRORS.VALID,
         required: [true, STOCK_QUANTITY_ERRORS.REQUIRED],
         min: [1, STOCK_QUANTITY_ERRORS.MIN]
-    },
-    isExists: {
-        type: Boolean,
-        required: true,
-        default: true
     }
 }, {
     toJSON: {

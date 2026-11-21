@@ -8,8 +8,7 @@ export function ProductFormProvider({ children }) {
         price: 0,
         category: '',
         description: '',
-        stockQuantity: 0,
-        isExists: false
+        stockQuantity: 0
     });
 
     const [formOpened, setFormOpened] = useState(false);
