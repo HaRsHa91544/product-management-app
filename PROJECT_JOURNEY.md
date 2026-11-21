@@ -34,8 +34,9 @@ a clear path from a small frontend exercise to a full stack app.
 - Started the React project with Vite.
 - Built `ProductForm` with controlled inputs and validation.
 - Added delete with a confirmation step.
-- Added edit. Editing works by copying the selected product into the form. The `isExists`
-  flag tells the form whether it is in "Add" mode or "Update" mode.
+- Added edit. Editing works by copying the selected product into the form. At this stage an
+  `isExists` flag told the form whether it was in "Add" mode or "Update" mode. This flag was
+  removed later (see Phase 7), and `id` became the only source of truth.
 - Added search by product name.
 - Refactored repeated input markup into one reusable `InputField` component.
 - Added category filtering and a "Clear filters" button.
@@ -110,6 +111,20 @@ Two more issues were fixed, and the validation design became clearer.
   follow-up to Issue #17).
 - Simplified `ProductFormContext` by removing the old single `productSubmitError` state.
 
+### Phase 7: Safer form closing and a simpler data model (Nov 15 - Nov 21)
+
+The final changes fixed two more issues and then removed an unnecessary piece of state.
+
+- Simplified `closeProductForm` so it decides what happened from the event type and CSS
+  classes, instead of a special string argument (Nov 15).
+- Fixed Issue #18: a submit button click was bubbling to the overlay and unmounting the form
+  before the save request finished. The form now closes only after a successful submit.
+- Fixed Issue #19: a newly added product could not be updated. The immediate fix made sure
+  the add path marked the saved product as an existing one.
+- Then removed the `isExists` flag from the frontend form state, `useProductActions`, the
+  Mongoose schema, and the Zod add validator (Nov 21). The presence of `product.id` now
+  decides whether the form adds or updates.
+
 ---
 
 ## 3. Simple architecture
@@ -162,9 +177,22 @@ Browser component
          -> fetch(...) to the Express server
 ```
 
-It decides whether to add or update by checking `product.isExists`, updates the products
-state after success, and passes the server's error details back to the form when something
-fails.
+It decides whether to add or update by checking `product.id`, updates the products state
+after success, and passes the server's error details back to the form when something fails.
+
+### How the form knows "Add" or "Update"
+
+There is no longer an `isExists` flag anywhere in the data model:
+
+- A fresh form has no `id`, so the button says **Add Product** and `saveProduct` sends a
+  `POST /products` request.
+- Clicking Edit puts a real product into the form, including its `id`. The button then says
+  **Update Product** and `saveProduct` sends a `PUT /products/:id` request.
+- The same `id` check also decides whether to compare the form with the stored product and
+  block an update when nothing changed.
+
+This is simpler because the mode is derived from data the app already has, instead of being
+stored as a second flag that can get out of sync.
 
 ### How validation errors reach the right input
 
@@ -233,18 +261,23 @@ price          number, required, at least 1
 category       string, required, at least 3 characters
 description    string, required, at least 3 characters
 stockQuantity  number, required, at least 1
-isExists       boolean, defaults to true
 ```
+
+MongoDB creates the unique `id` for each document. The schema turns it into `id` in JSON
+responses and hides MongoDB's internal `_id` and `__v` fields.
 
 ---
 
 ## 4. What happens when a user adds a product
 
 1. The user clicks **+ Product**. `setFormOpened(true)` makes the form appear.
-2. The user types. Each change updates `productForm` in `ProductFormContext`.
+2. The new form has no `id`, so it is in "Add" mode. Each typed change updates `productForm`
+   in `ProductFormContext`.
 3. `validateProductForm` runs on every render. The submit button stays disabled until all
-   fields are valid. When editing, it also stays disabled until at least one field changes.
-4. On submit, the button is disabled to stop double clicks, then `saveProduct` runs.
+   fields are valid. When editing (the form has an `id`), it also stays disabled until at
+   least one field changes.
+4. On submit, the button is disabled to stop double clicks, then `saveProduct` runs. The form
+   is not closed yet; it waits for the request to finish.
 5. `saveProduct` calls `addProductService`, which sends a `POST /products` request.
 6. The server validates the body with Zod, creates the product with Mongoose, and saves it
    in MongoDB.
@@ -465,11 +498,44 @@ evaluated in the wrong order.
 - Compare the product in the form with the product in the list, field by field.
 - Keep the Update button disabled until at least one field is different.
 - Guard against a missing product before comparing.
-- Wrap the ternary in parentheses:
-  `(productForm.isExists ? isExistingProductChanged : true)`.
+- Wrap the ternary in parentheses. It was first written as
+  `(productForm.isExists ? isExistingProductChanged : true)` and later became
+  `(productForm.id ? isExistingProductChanged : true)` when the flag was removed.
 
 **Lesson:** Avoid pointless network requests. When mixing `&&` and `?:`, use parentheses to
 make the intended order obvious, and test the exact edge case you are fixing.
+
+### Problem 19: The form unmounted while a save was still running (Issue #18)
+
+**What happened:** The submit button's click bubbled up to the form overlay. The overlay's
+close handler saw the button's CSS class and closed the form immediately. That unmounted the
+form while the asynchronous save was still in progress, so the submission was cancelled.
+
+**Solution:**
+- `closeProductForm` now checks both the event type and the target's CSS class.
+- A click on the overlay or the Close button still closes the form.
+- A submit event is different: `closeProductForm(e)` is called only inside the `.then()` of
+  `saveProduct`, after the server has responded successfully.
+- The submit button no longer triggers the close handler just by being clicked.
+
+**Lesson:** Do not remove a component while async work is using its state. Also remember
+that clicks bubble up in React; a parent's click handler can run for child clicks too.
+
+### Problem 20: Newly added products could not be updated (Issue #19)
+
+**What happened:** After adding a product, opening it in edit mode did not allow it to be
+updated. At the time, add and update were decided by the `isExists` flag, and the add flow
+was not reliably marking the saved product as existing.
+
+**Solution:**
+- The immediate fix was to set the flag on the product before saving a new one.
+- The cleaner fix came next: remove `isExists` from the form state, the context, the action
+  hook, the Mongoose schema, and the Zod add validator.
+- Now `product.id` is the only check. If there is an `id`, the product exists and can be
+  updated; if there is no `id`, it is new.
+
+**Lesson:** A duplicate flag is a second source of truth. When real data already answers the
+question (here, "does this product have an id?"), use that instead of maintaining a flag.
 
 ---
 
@@ -496,6 +562,10 @@ make the intended order obvious, and test the exact edge case you are fixing.
 12. **Avoid no-op requests.** If nothing changed, there is nothing to save.
 13. **Keep repeated messages in constants.** Matching client and server wording prevents
     confusing, slightly different validation messages.
+14. **Wait for the request before closing the form.** Closing early can cancel the work and
+    lose the user's input.
+15. **Use data you already have as the source of truth.** `id` tells you if a product exists;
+    a separate `isExists` flag only creates another thing to keep in sync.
 
 ---
 
@@ -593,6 +663,8 @@ This project started as a small React practice app and grew in clear stages:
 8. Polish edge cases such as failed saves and double-click requests.
 9. Improve validation feedback by showing server errors per field, and prevent updates when
    nothing has changed.
+10. Make form closing safe during async requests and simplify the model by removing
+    `isExists`; `id` now decides add versus update.
 
 The biggest takeaway is not any single library. It is the habit of noticing duplication,
 unclear responsibilities, and repeated bugs, then moving code so that each piece has one
