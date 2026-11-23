@@ -1,5 +1,4 @@
 import { useProducts } from "../context/ProductsContext.jsx";
-import { useProductForm } from "../context/ProductFormContext.jsx";
 
 import addProductService from "../services/addProductService.js";
 import updateProductService from "../services/updateProductService.js";
@@ -7,11 +6,6 @@ import deleteProductService from "../services/deleteProductService.js";
 
 function useProductActions() {
     const { products, setProducts } = useProducts();
-
-    const {
-        setProductForm,
-        setFormOpened
-    } = useProductForm();
 
     async function saveProduct(product) {
         // Updates the existing product
@@ -38,22 +32,17 @@ function useProductActions() {
         }
     }
 
-    async function deleteProduct(id, setDeleteError) {
+    async function deleteProduct(id) {
         try {
             await deleteProductService(id);
             setProducts(prev => prev.filter(p => p.id != id));
         }
         catch (e) {
-            setDeleteError(e.message);
+            return Promise.reject(e.message);
         }
     }
 
-    function editProduct(product) {
-        setProductForm(product);
-        setFormOpened(true);
-    }
-
-    return { editProduct, deleteProduct, saveProduct };
+    return { deleteProduct, saveProduct };
 }
 
 export default useProductActions;

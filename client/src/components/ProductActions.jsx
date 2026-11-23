@@ -2,9 +2,13 @@ import { useState } from "react";
 import useProductActions from "../hooks/useProductActions.js";
 import '../styles/product-actions.css';
 import disableButton from "../utils/disableButton.js";
+import { useProductForm } from "../context/ProductFormContext.jsx";
+import enableButton from "../utils/enableButton.js";
 
 function ProductActions({ product, setSelectedProductId = null }) {
-    const { editProduct, deleteProduct } = useProductActions();
+    const { deleteProduct } = useProductActions();
+    
+    const { setProductForm, setFormOpened } = useProductForm();
 
     const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false);
 
@@ -12,10 +16,33 @@ function ProductActions({ product, setSelectedProductId = null }) {
 
     const { id } = product;
 
+
+    const handleProductSelect = () => {
+        setSelectedProductId(id);
+    };
+
+    const editProduct = (product) => {
+        setProductForm(product);
+        setFormOpened(true);
+    }
+
     const productDeleteHandler = (e) => {
         disableButton(e.target);
-        deleteProduct(id, setDeleteError);
+        deleteProduct(id).catch(error => {
+            setDeleteError(error);
+            enableButton(e.target);
+        });
     };
+
+    const handleDeleteBtnClick = () => {
+        setIsDeleteBtnClicked(true);
+    };
+
+    const handleDeleteBtnReset = () => {
+        setIsDeleteBtnClicked(false);
+        setDeleteError('');
+    };
+
 
     if (isDeleteBtnClicked)
         return <div className="delete-confirmation-section">
@@ -28,10 +55,7 @@ function ProductActions({ product, setSelectedProductId = null }) {
                 </button>
                 <button
                     className="action-positive-btn"
-                    onClick={() => {
-                        setIsDeleteBtnClicked(false);
-                        setDeleteError('');
-                    }}>No
+                    onClick={handleDeleteBtnReset}>No
                 </button>
             </div>
             {deleteError && <span className="input-error">{deleteError}</span>}
@@ -43,7 +67,7 @@ function ProductActions({ product, setSelectedProductId = null }) {
             (setSelectedProductId) &&
             <button
                 className="action-positive-btn"
-                onClick={() => setSelectedProductId(id)}>
+                onClick={handleProductSelect}>
                 View
             </button>
         }
@@ -54,7 +78,7 @@ function ProductActions({ product, setSelectedProductId = null }) {
         </button>
         <button
             className="action-negative-btn"
-            onClick={() => setIsDeleteBtnClicked(true)}>
+            onClick={handleDeleteBtnClick}>
             Delete
         </button>
     </div>;

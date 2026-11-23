@@ -36,7 +36,7 @@ function ProductForm() {
     function closeProductForm(e) {
         const elementClassList = e.target.classList;
         if (
-            (elementClassList.contains('form-overlay') && e.type === 'click')  ||
+            (elementClassList.contains('form-overlay') && e.type === 'click') ||
             (elementClassList.contains('product-form') && e.type === 'submit') ||
             (elementClassList.contains('form-close-btn') && e.type === 'click')
         ) {
@@ -52,6 +52,10 @@ function ProductForm() {
         if (type === 'number' && value) {
             value = Number(value);
         }
+
+        // Removes server validation errors when there are changes in 
+        if (Object.keys(serverValidationErrors).length != 0)
+            setServerValidationErrors({});
 
         setProductForm((prev) => {
             return { ...prev, [name]: value }
@@ -79,7 +83,7 @@ function ProductForm() {
 
     if (productForm.id) {
         const existingProduct = products.find(p => p.id === productForm.id);
-        
+
         if (existingProduct)
             isExistingProductChanged = Object
                 .keys(existingProduct)
