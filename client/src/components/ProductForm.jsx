@@ -69,8 +69,9 @@ function ProductForm() {
             .then(() => {
                 closeProductForm(e);
             })
-            .catch((errors) => {
-                setServerValidationErrors(errors);
+            .catch((error) => {
+                // Here error.cause contains errors object from server response. 
+                setServerValidationErrors(error.cause || error);
             });
     }
 
@@ -96,7 +97,6 @@ function ProductForm() {
         !validationErrors.category &&
         !validationErrors.stockQuantity &&
         (productForm.id ? isExistingProductChanged : true);
-
 
     return <div className='form-overlay' onClick={closeProductForm}>
         <div className="form-container">
@@ -156,7 +156,11 @@ function ProductForm() {
                     id={'stockQuantity'}
                     value={productForm.stockQuantity}
                     changeHandler={inputChangeHandler}
-                    errors={validationErrors.stockQuantity || serverValidationErrors.stockQuantity}
+                    errors={
+                        validationErrors.stockQuantity ||
+                        serverValidationErrors.stockQuantity ||
+                        serverValidationErrors.message
+                    }
                 ></InputField>
 
                 <button

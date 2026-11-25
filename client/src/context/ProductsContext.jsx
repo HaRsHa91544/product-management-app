@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import getProducts from "../services/getProductsService.js";
+import getProductsService from "../services/getProductsService.js";
 
 const ProductsContext = createContext([]);
 
@@ -11,12 +11,16 @@ export function ProductsProvider({ children }) {
     useEffect(() => {
         (async () => {
             try {
-                const products = await getProducts();
+                const products = await getProductsService();
                 setProducts([...products]);
                 setStateOfProducts('success');
             }
-            catch (error) {
-                setStateOfProducts(error.message || 'Failed to load products, try again!');
+            catch (e) {
+                if (e instanceof TypeError || e instanceof SyntaxError) {
+                    e.name = '';
+                    e.message = 'Something went wrong!';
+                }
+                setStateOfProducts(e.message || 'Failed to load products, try again!');
             }
         })();
     }, []);

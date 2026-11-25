@@ -17,7 +17,11 @@ function useProductActions() {
                 }));
             }
             catch (e) {
-                return Promise.reject(e.cause);
+                if (e instanceof TypeError || e instanceof SyntaxError) {
+                    e.name = '';
+                    e.message = 'Something went wrong!';
+                }
+                return Promise.reject(e);
             }
         }
         // Adds the new product
@@ -27,7 +31,11 @@ function useProductActions() {
                 setProducts([...products, newProduct]);
             }
             catch (e) {
-                return Promise.reject(e.cause);
+                if (e instanceof TypeError || e instanceof SyntaxError) {
+                    e.name = '';
+                    e.message = 'Something went wrong!';
+                }
+                return Promise.reject(e);
             }
         }
     }
@@ -38,7 +46,11 @@ function useProductActions() {
             setProducts(prev => prev.filter(p => p.id != id));
         }
         catch (e) {
-            return Promise.reject(e.message);
+            if (e instanceof TypeError || e instanceof SyntaxError) {
+                e.name = '';
+                e.message = 'Something went wrong!';
+            }
+            return Promise.reject(e);
         }
     }
 

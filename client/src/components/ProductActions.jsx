@@ -7,7 +7,7 @@ import enableButton from "../utils/enableButton.js";
 
 function ProductActions({ product, setSelectedProductId = null }) {
     const { deleteProduct } = useProductActions();
-    
+
     const { setProductForm, setFormOpened } = useProductForm();
 
     const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false);
@@ -29,7 +29,7 @@ function ProductActions({ product, setSelectedProductId = null }) {
     const productDeleteHandler = (e) => {
         disableButton(e.target);
         deleteProduct(id).catch(error => {
-            setDeleteError(error);
+            setDeleteError(error.message);
             enableButton(e.target);
         });
     };
