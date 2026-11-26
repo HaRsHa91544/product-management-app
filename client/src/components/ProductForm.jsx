@@ -23,6 +23,7 @@ function ProductForm() {
 
     const validationErrors = validateProductForm(productForm);
 
+
     function clearProductForm() {
         setProductForm({
             name: '',
@@ -32,6 +33,7 @@ function ProductForm() {
             stockQuantity: 0
         });
     }
+
 
     function closeProductForm(e) {
         const elementClassList = e.target.classList;
@@ -45,6 +47,7 @@ function ProductForm() {
             clearProductForm();
         }
     }
+
 
     function inputChangeHandler(e) {
         let { name, value, type } = e.target;
@@ -62,6 +65,7 @@ function ProductForm() {
         });
     }
 
+
     function productSubmitHandler(e) {
         e.preventDefault();
         disableButton(e.submitter);
@@ -75,14 +79,18 @@ function ProductForm() {
             });
     }
 
+
     // When form is not opened then don't render anything
     if (!formOpened) {
         return <></>;
     }
+    
+
+    const canUpdate = productForm.id ? true : false;
 
     let isExistingProductChanged = false;
 
-    if (productForm.id) {
+    if (canUpdate) {
         const existingProduct = products.find(p => p.id === productForm.id);
 
         if (existingProduct)
@@ -91,12 +99,18 @@ function ProductForm() {
                 .some(k => existingProduct[k] !== productForm[k]);
     }
 
-    const isSubmitAllowed = !validationErrors.name &&
-        !validationErrors.price &&
-        !validationErrors.description &&
-        !validationErrors.category &&
-        !validationErrors.stockQuantity &&
-        (productForm.id ? isExistingProductChanged : true);
+
+    const hasValidationErrors = validationErrors.name ||
+        validationErrors.price ||
+        validationErrors.description ||
+        validationErrors.category ||
+        validationErrors.stockQuantity;
+
+
+    const isSubmitAllowed =  !hasValidationErrors &&
+        (canUpdate ? isExistingProductChanged : true);
+
+
 
     return <div className='form-overlay' onClick={closeProductForm}>
         <div className="form-container">
@@ -174,7 +188,7 @@ function ProductForm() {
                     className="action-positive-btn form-submit-btn"
                     type="submit"
                     disabled={!isSubmitAllowed}>
-                    {(productForm.id) ? 'Update Product' : 'Add Product'}
+                    {canUpdate ? 'Update Product' : 'Add Product'}
                 </button>
             </form>
         </div>
