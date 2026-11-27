@@ -39,7 +39,7 @@ function useProductActions() {
             setProducts(prev => prev.filter(p => p.id != id));
         }
         catch (e) {
-            return handleServiceErrors();
+            return handleServiceErrors(e);
         }
     }
 
