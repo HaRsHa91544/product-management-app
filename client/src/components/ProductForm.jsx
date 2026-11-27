@@ -84,7 +84,7 @@ function ProductForm() {
     if (!formOpened) {
         return <></>;
     }
-    
+
 
     const canUpdate = productForm.id ? true : false;
 
@@ -107,7 +107,7 @@ function ProductForm() {
         validationErrors.stockQuantity;
 
 
-    const isSubmitAllowed =  !hasValidationErrors &&
+    const isSubmitAllowed = !hasValidationErrors &&
         (canUpdate ? isExistingProductChanged : true);
 
 

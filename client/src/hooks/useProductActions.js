@@ -3,6 +3,7 @@ import { useProducts } from "../context/ProductsContext.jsx";
 import addProductService from "../services/addProductService.js";
 import updateProductService from "../services/updateProductService.js";
 import deleteProductService from "../services/deleteProductService.js";
+import handleServiceErrors from "../utils/handleServiceErrors.js";
 
 function useProductActions() {
     const { products, setProducts } = useProducts();
@@ -17,11 +18,7 @@ function useProductActions() {
                 }));
             }
             catch (e) {
-                if (e instanceof TypeError || e instanceof SyntaxError) {
-                    e.name = '';
-                    e.message = 'Something went wrong!';
-                }
-                return Promise.reject(e);
+                return handleServiceErrors(e);
             }
         }
         // Adds the new product
@@ -31,11 +28,7 @@ function useProductActions() {
                 setProducts([...products, newProduct]);
             }
             catch (e) {
-                if (e instanceof TypeError || e instanceof SyntaxError) {
-                    e.name = '';
-                    e.message = 'Something went wrong!';
-                }
-                return Promise.reject(e);
+                return handleServiceErrors(e);
             }
         }
     }
@@ -46,11 +39,7 @@ function useProductActions() {
             setProducts(prev => prev.filter(p => p.id != id));
         }
         catch (e) {
-            if (e instanceof TypeError || e instanceof SyntaxError) {
-                e.name = '';
-                e.message = 'Something went wrong!';
-            }
-            return Promise.reject(e);
+            return handleServiceErrors();
         }
     }
 

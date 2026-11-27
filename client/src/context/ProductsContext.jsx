@@ -8,6 +8,11 @@ export function ProductsProvider({ children }) {
 
     const [stateOfProducts, setStateOfProducts] = useState('Loading...');
 
+    const productsContextValue = useMemo(() => {
+        return { products, setProducts, stateOfProducts };
+    }, [products, stateOfProducts]);
+
+
     useEffect(() => {
         (async () => {
             try {
@@ -16,18 +21,11 @@ export function ProductsProvider({ children }) {
                 setStateOfProducts('success');
             }
             catch (e) {
-                if (e instanceof TypeError || e instanceof SyntaxError) {
-                    e.name = '';
-                    e.message = 'Something went wrong!';
-                }
-                setStateOfProducts(e.message || 'Failed to load products, try again!');
+                setStateOfProducts('Failed to load products, try again!');
             }
         })();
     }, []);
-
-    const productsContextValue = useMemo(() => {
-        return { products, setProducts, stateOfProducts };
-    }, [products, stateOfProducts]);
+    
 
     return <ProductsContext value={productsContextValue}>
         {children}
